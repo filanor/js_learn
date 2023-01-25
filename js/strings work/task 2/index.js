@@ -1,3 +1,4 @@
 const userName = prompt("Как вас зовут?").trim().toLowerCase();
-const userAge = Number(prompt("Сколько вам лет?").trim());
+let userAge = prompt("Сколько вам лет?").trim();
+userAge = Number(userAge.replace(/\D/g, ""));
 alert(`Вас зовут ${userName} и вам ${userAge} лет`);
