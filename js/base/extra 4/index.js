@@ -1,11 +1,11 @@
+const minPassLength = 3;
+const maxPassLength = 30;
+
 let newPass = prompt("Введите пароль:");
-console.log(newPass.search(/\d/));
-if (
-  newPass.length >= 3 &&
-  newPass.length <= 30 &&
-  newPass.search(/\d/) != -1 &&
-  newPass.search(/\d/) != -1
-) {
+let isPassLengthValid = newPass.length >= 3 && newPass.length <= 30 &&;
+let isPassContentValid = newPass.search(/\d/) != -1 && newPass.search(/[A-Z]/) != -1;
+
+if (isPassLengthValid && isPassContentValid) {
   alert("Пароль валидный. Добро пожаловать в аккаунт!");
 } else {
   alert(
