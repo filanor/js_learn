@@ -18,6 +18,24 @@
 
 const clientsEstimations = [];
 
+for (let i = 0; i < 5; i++) {
+  let currentEstimation = askClientToGiveEstimation();
+  if (currentEstimation) {
+    clientsEstimations.push(currentEstimation);
+  }
+}
+console.log(clientsEstimations);
+
+const goodEstimations = clientsEstimations.filter(
+  (estimation) => estimation > 5
+).length;
+
+alert(
+  `Всего положительных оценок: ${goodEstimations}; Всего отрицательных оценок: ${
+    clientsEstimations.length - goodEstimations
+  }`
+);
+
 function askClientToGiveEstimation() {
   const estimation = Number(
     prompt("Как вы оцениваете нашу кофейню от 1 до 10?")
@@ -29,11 +47,3 @@ function askClientToGiveEstimation() {
   }
   return false;
 }
-
-for (let i = 0; i < 5; i++) {
-  let currentEstimation = askClientToGiveEstimation();
-  if (currentEstimation) {
-    clientsEstimations.push(currentEstimation);
-  }
-}
-console.log(clientsEstimations);
