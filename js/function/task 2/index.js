@@ -28,7 +28,7 @@ function getSumOfNumbers(number, type = "odd") {
 
   // настраиваем цикл
   const step = type === "even" || type === "odd" ? 2 : 1;
-  const i = type === "odd" ? 1 : 0;
+  let i = type === "odd" ? 1 : 0;
 
   // считаем
   for (i; i <= number; i = i + step) {
