@@ -19,7 +19,7 @@
 быть изменен.
 */
 const goals = [8, 1, 1, 3, 2, -1, 5];
-const filtredGoals = [];
+let filtredGoals = [];
 
 ///////////////////////////////////
 //Были ли автоматические поражения
@@ -29,11 +29,9 @@ console.log(`Были автоматические поражения: ${autoDef
 
 // Убираем автоматические поражения, так как они не нужны для подсчетов
 if (autoDefeat) {
-  filtredGoals.push(
-    ...goals.filter((game) => {
-      return game > -1;
-    })
-  );
+  filtredGoals = goals.filter((game) => {
+    return game > -1;
+  });
 } else {
   filtredGoals.push(...goals);
 }
@@ -43,23 +41,30 @@ const minGameGoals = Math.min(...filtredGoals);
 
 ////////////////////////////////
 //Самый результативный матч по количеству голов
-const maxGameGoalsIndex =
-  goals.findIndex((game) => {
-    return game === maxGameGoals;
-  }) + 1;
+const maxGameGoalsIndex = goals.findIndex((game) => {
+  return game === maxGameGoals;
+});
 
 console.log(
-  `Самый результативный матч был под номером ${maxGameGoalsIndex}. В нем было забито ${maxGameGoals} гол(ов).`
+  `Самый результативный матч был под номером ${
+    maxGameGoalsIndex + 1
+  }. В нем было забито ${maxGameGoals} гол(ов).`
 );
 
 ////////////////////////////////
 // Самые не результативные игры.
-const minGameGoalsIndex = [];
-goals.forEach((game, index) => {
+// const minGameGoalsIndex = [];
+const minGameGoalsIndex = goals.map((game, index) => {
   if (game === minGameGoals) {
-    minGameGoalsIndex.push(index + 1);
+    return index;
   }
 });
+
+// goals.forEach((game, index) => {
+//   if (game === minGameGoals) {
+//     minGameGoalsIndex.push(index + 1);
+//   }
+// });
 console.log(
   `Самые не результативные матчи были под номерами ${minGameGoalsIndex.join(
     ", "
@@ -69,10 +74,7 @@ console.log(
 ////////////////////////////////
 // Общее количество голов за сезон.
 const totalGoals = filtredGoals.reduce((sum, qtty) => {
-  if (qtty > -1) {
-    return (sum += qtty);
-  }
-  return sum;
+  return (sum += qtty);
 }, 0);
 console.log(`Общее количество голов за сезон равно ${totalGoals}`);
 
@@ -82,4 +84,3 @@ const averageNumberOfGoals = totalGoals / filtredGoals.length;
 console.log(
   `Среднее количество голов за матч равно ${averageNumberOfGoals.toFixed(2)}`
 );
-// alert(`Среднее количество голов за матч равно ${numberOfGoals}`);
