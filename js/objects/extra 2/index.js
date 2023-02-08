@@ -12,14 +12,15 @@ heatHero() - функция, которая принимает в себя об�
 
 const startGame = (heroPlayer, enemyPlayer) => {
   do {
-    if (getRandomNumberInRange(0, 1) === 0) {
+    const randomHit = getRandomNumberInRange(0, 1);
+    if (randomHit === 0) {
       hitChar(enemyPlayer);
       if (enemyPlayer.health <= 0) {
         const { name, health } = heroPlayer;
         console.log(`${name} победил! У него осталось ${health} здоровья`);
         return true;
       }
-    } else if (getRandomNumberInRange(0, 1) === 1) {
+    } else if (randomHit === 1) {
       hitChar(heroPlayer);
       if (heroPlayer.health <= 0) {
         const { name, health } = enemyPlayer;
@@ -27,7 +28,7 @@ const startGame = (heroPlayer, enemyPlayer) => {
         return true;
       }
     }
-  } while (true);
+  } while (enemyPlayer.health > 0 || heroPlayer.health > 0);
 };
 
 function getRandomNumberInRange(min, max) {
@@ -35,7 +36,6 @@ function getRandomNumberInRange(min, max) {
 }
 
 const hitChar = (char) => (char.health = char.health - 10);
-// const heatHero = (hero) => (hero.health = hero.health - 10);
 
 const hero = {
   name: "Batman",
