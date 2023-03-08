@@ -28,7 +28,7 @@ const renderPhoto = ({ title, url }) => {
 
 const getFastestLoadedPhoto = (ids) => {
   const fetchArray = [];
-  for (id of ids) {
+  for (const id of ids) {
     fetchArray.push(fetch(`${PHOTOS_URL}/${id}`));
   }
   Promise.race(fetchArray)

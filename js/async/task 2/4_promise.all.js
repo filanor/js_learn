@@ -29,7 +29,7 @@ const getUsersByIds = (users) => {
   userListLoader.removeAttribute("hidden");
 
   const fetchArray = [];
-  for (id of users) {
+  for (const id of users) {
     fetchArray.push(fetch(`${USER_URL}/${id}`));
   }
 
