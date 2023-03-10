@@ -28,7 +28,8 @@ const getData = async (url, id) => {
     }
   }
 };
-createPost = ({ title, body }) => {
+
+const createPost = ({ title, body }) => {
   const post = document.createElement("div");
   post.className = "post";
   post.setAttribute("id", "post");
@@ -41,7 +42,7 @@ createPost = ({ title, body }) => {
   return post;
 };
 
-createComment = ({ email, body }) => {
+const createComment = ({ email, body }) => {
   const comment = document.createElement("div");
   comment.className = "post-comment";
   comment.innerHTML = `    
