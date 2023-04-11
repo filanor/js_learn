@@ -6,14 +6,11 @@ import React from "react";
 import * as ReactDOMClient from "react-dom/client";
 //=======================
 
-import Counter from "./components/counter";
-const App = () => {
-  return <Counter />;
-};
-
 /* - для React до 18 версии
 reactDom.render(<App />, container); 
 ========================== */
+
+import App from "./app";
 
 const container = document.getElementById("root");
 const root = ReactDOMClient.createRoot(container);
