@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const SearchStatus = ({ qtty }) => {
   const getTitleBage = () => {
@@ -11,6 +12,10 @@ const SearchStatus = ({ qtty }) => {
   };
 
   return <span className="badge fs-4 bg-primary m-2">{getTitleBage()}</span>;
+};
+
+SearchStatus.propTypes = {
+  qtty: PropTypes.number.isRequired
 };
 
 export default SearchStatus;

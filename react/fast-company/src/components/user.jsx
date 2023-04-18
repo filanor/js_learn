@@ -1,4 +1,6 @@
 import React from "react";
+import PropTypes from "prop-types";
+
 import Qualitie from "./qualitie";
 import Bookmark from "./bookmark";
 
@@ -11,7 +13,7 @@ const User = ({
   rate,
   onDelete,
   onBook,
-  bookmark,
+  bookmark
 }) => {
   // console.log(onDelete);
   return (
@@ -40,6 +42,23 @@ const User = ({
       </td>
     </tr>
   );
+};
+
+User.propTypes = {
+  _id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  profession: PropTypes.object.isRequired,
+  qualities: PropTypes.array.isRequired,
+  completedMeetings: PropTypes.number,
+  rate: PropTypes.number,
+  onDelete: PropTypes.func.isRequired,
+  onBook: PropTypes.func.isRequired,
+  bookmark: PropTypes.bool.isRequired
+};
+
+User.defaultProps = {
+  completedMeetings: 0,
+  rate: 0
 };
 
 export default User;
