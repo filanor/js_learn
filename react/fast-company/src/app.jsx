@@ -13,11 +13,9 @@ const App = () => {
   const handleBookmark = (id) => {
     setUsers(
       users.map((user) => {
-        if (user._id === id) {
-          const bookmark = !user.bookmark;
-          return { ...user, bookmark: bookmark };
-        }
-        return { ...user };
+        return user._id === id
+          ? { ...user, bookmark: !user.bookmark }
+          : { ...user };
       })
     );
   };

@@ -17,7 +17,7 @@ const User = ({
 }) => {
   // console.log(onDelete);
   return (
-    <tr key={_id}>
+    <tr>
       <td>{name}</td>
       <td>
         {qualities.map((qual) => (
