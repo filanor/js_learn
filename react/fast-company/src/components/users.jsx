@@ -12,7 +12,7 @@ const Users = ({ users, onDelete, onBook }) => {
   const [professions, setProfessions] = useState(api.professions.fetchAll());
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProf, setSellectedProf] = useState();
-  const pageSize = 3;
+  const pageSize = 2;
 
   useEffect(() => {
     api.professions.fetchAll().then((data) => setProfessions(data));
@@ -34,6 +34,12 @@ const Users = ({ users, onDelete, onBook }) => {
   const userCrop = paginate(filtredUsers, currentPage, pageSize);
 
   const clearFilter = () => setSellectedProf();
+
+  useEffect(() => {
+    if (currentPage * pageSize > userCrop.length && currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  }, [users]);
 
   // Рендеринг
   if (count === 0) {

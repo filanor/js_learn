@@ -9,12 +9,10 @@ const GroopList = ({
   onItemSelect
 }) => {
   const itemsArray = Array.isArray(items) ? items : Object.values(items);
-  console.log(itemsArray);
-  console.log();
+
   return (
     <ul className="list-group">
       {itemsArray.map((item) => {
-        console.log("item", item);
         return (
           <li
             className={
