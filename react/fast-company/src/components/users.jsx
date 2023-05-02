@@ -6,16 +6,21 @@ import User from "./user";
 import Pagination from "./pagination";
 import { paginate } from "../utils/paginate";
 import GroopList from "./groopList";
+import Loader from "./loader/loader";
 import api from "../api";
 
 const Users = ({ users, onDelete, onBook }) => {
   const [professions, setProfessions] = useState(api.professions.fetchAll());
+  const [isProfessionsLoaded, setIsProfessionsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProf, setSellectedProf] = useState();
   const pageSize = 2;
 
   useEffect(() => {
-    api.professions.fetchAll().then((data) => setProfessions(data));
+    api.professions.fetchAll().then((data) => {
+      setProfessions(data);
+      setIsProfessionsLoaded(true);
+    });
   }, []);
 
   const handlePageChange = (pageIndex) => {
@@ -50,20 +55,21 @@ const Users = ({ users, onDelete, onBook }) => {
 
   return (
     <div className="d-flex">
-      {professions && (
-        <div className="d-flex flex-column flex-shrink-1 p-3">
+      <div className="d-flex flex-column flex-shrink-1 p-3 justify-content-center">
+        {(!isProfessionsLoaded && <Loader />) || (
           <GroopList
             items={professions}
             onItemSelect={handleProfessionSelect}
             selectedItem={selectedProf}
           />
-          <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-            Очистить
-          </button>
-        </div>
-      )}
+        )}
 
-      <div className="d-flex flex-column flex-grow-1">
+        <button className="btn btn-secondary mt-2" onClick={clearFilter}>
+          Очистить
+        </button>
+      </div>
+
+      <div className="d-flex flex-column p-3 flex-grow-1">
         <SearchStatus qtty={count} />
         <table className="table">
           <thead>

@@ -1,12 +1,19 @@
+/* eslint-disable react/jsx-no-comment-textnodes */
 import React, { useEffect, useState } from "react";
 import Users from "./components/users";
 import api from "./api";
+import Loader from "./components/loader/loader";
 
 const App = () => {
   const [users, setUsers] = useState();
+  const [isUsersLoaded, setIsUsersLoaded] = useState(false);
 
   useEffect(() => {
-    api.users.fetchAll().then((data) => setUsers(data));
+    api.users.fetchAll().then((data) => {
+      setUsers(data);
+      console.log("true");
+      setIsUsersLoaded(true);
+    });
   }, []);
 
   const handleDelete = (id) => {
@@ -24,11 +31,12 @@ const App = () => {
   };
 
   return (
-    users && (
+    (!isUsersLoaded && <Loader />) ||
+    (users && (
       <React.StrictMode>
         <Users users={users} onDelete={handleDelete} onBook={handleBookmark} />
       </React.StrictMode>
-    )
+    ))
   );
 };
 

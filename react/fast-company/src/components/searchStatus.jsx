@@ -11,7 +11,7 @@ const SearchStatus = ({ qtty }) => {
     return `${qtty} ${mans} тусанет с тобой сегодня`;
   };
 
-  return <span className="badge fs-4 bg-primary m-2">{getTitleBage()}</span>;
+  return <span className="badge fs-4 bg-primary">{getTitleBage()}</span>;
 };
 
 SearchStatus.propTypes = {
