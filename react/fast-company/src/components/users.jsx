@@ -15,26 +15,32 @@ const Users = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProf, setSellectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
-  const pageSize = 15;
+  const pageSize = 2;
 
   const [users, setUsers] = useState();
-  // const [isUsersLoaded, setIsUsersLoaded] = useState(false);
 
   useEffect(() => {
     api.users.fetchAll().then((data) => {
       setUsers(data);
-      console.log("true");
-      // setIsUsersLoaded(true);
     });
   }, []);
-  // useEffect(() => {
-  //   if (currentPage * pageSize > userCrop.length && currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //   }
-  // }, [users]);
+
+  useEffect(() => {
+    api.professions.fetchAll().then((data) => {
+      setProfessions(data);
+      setIsProfessionsLoaded(true);
+    });
+  }, []);
 
   const handleDelete = (id) => {
     setUsers((prevState) => prevState.filter((user) => user._id !== id));
+    // console.log("currentPage", currentPage);
+    // console.log("users.length", users.length);
+    // console.log("pageSize", pageSize);
+    // if (userCrop && currentPage > userCrop.length / pageSize) {
+    //   console.log("Пиздец");
+    //   setCurrentPage((prevState) => prevState - 1);
+    // }
   };
 
   const handleBookmark = (id) => {
@@ -47,13 +53,6 @@ const Users = () => {
     );
   };
 
-  useEffect(() => {
-    api.professions.fetchAll().then((data) => {
-      setProfessions(data);
-      setIsProfessionsLoaded(true);
-    });
-  }, []);
-
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
@@ -61,7 +60,7 @@ const Users = () => {
   const handleProfessionSelect = (user) => {
     setSellectedProf(user);
     setCurrentPage(1);
-  };
+  }; 
 
   const handleOnSort = (item) => {
     setSortBy(item);
@@ -74,6 +73,7 @@ const Users = () => {
     const count = filtredUsers.length;
     const sortedUsers = _.orderBy(filtredUsers, [sortBy.path], [sortBy.order]);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
+    // setUserCrop(paginate(sortedUsers, currentPage, pageSize));
     const clearFilter = () => setSellectedProf();
 
     // Рендеринг

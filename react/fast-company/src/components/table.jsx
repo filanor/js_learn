@@ -22,7 +22,10 @@ Table.propTypes = {
   selectedSort: PropTypes.object,
   columns: PropTypes.object,
   data: PropTypes.array,
-  children: PropTypes.array
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node
+  ])
 };
 
 export default Table;
