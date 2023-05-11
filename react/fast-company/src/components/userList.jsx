@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
 
-import SearchStatus from "./searchStatus";
-import Pagination from "./pagination";
+import SearchStatus from "../components/searchStatus";
+import Pagination from "../components/pagination";
 import { paginate } from "../utils/paginate";
-import GroopList from "./groopList";
-import Loader from "./loader/loader";
+import GroopList from "../components/groopList";
+import Loader from "../components/loader/loader";
 import api from "../api";
-import UsersTable from "./usersTable";
+import UsersTable from "../components/usersTable";
 
-const Users = () => {
+const UsersList = () => {
   const [professions, setProfessions] = useState(api.professions.fetchAll());
   const [isProfessionsLoaded, setIsProfessionsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -60,7 +60,7 @@ const Users = () => {
   const handleProfessionSelect = (user) => {
     setSellectedProf(user);
     setCurrentPage(1);
-  }; 
+  };
 
   const handleOnSort = (item) => {
     setSortBy(item);
@@ -133,4 +133,4 @@ const Users = () => {
 //   onBook: PropTypes.func.isRequired
 // };
 
-export default Users;
+export default UsersList;
