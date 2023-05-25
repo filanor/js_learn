@@ -10,7 +10,7 @@ import UserPage from "./components/userPage";
 
 const App = () => {
   return (
-    <div className="d-flex flex-column">
+    <div className="main-div d-flex flex-column">
       <NavBar />
       <Switch>
         <Route exact path="/" component={Main} />

@@ -16,3 +16,11 @@ code {
   display: flex;
   justify-content: center;
 }
+
+*:focus {
+  box-shadow: none !important;
+}
+
+.main-div {
+  width: 100%;
+}

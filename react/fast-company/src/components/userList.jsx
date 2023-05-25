@@ -8,14 +8,16 @@ import GroopList from "../components/groopList";
 import Loader from "../components/loader/loader";
 import api from "../api";
 import UsersTable from "../components/usersTable";
+import TextField from "./textField";
 
 const UsersList = () => {
+  const [searchQuery, setSearchQuery] = useState("");
   const [professions, setProfessions] = useState(api.professions.fetchAll());
   const [isProfessionsLoaded, setIsProfessionsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProf, setSellectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
-  const pageSize = 2;
+  const pageSize = 8;
 
   const [users, setUsers] = useState();
 
@@ -34,13 +36,6 @@ const UsersList = () => {
 
   const handleDelete = (id) => {
     setUsers((prevState) => prevState.filter((user) => user._id !== id));
-    // console.log("currentPage", currentPage);
-    // console.log("users.length", users.length);
-    // console.log("pageSize", pageSize);
-    // if (userCrop && currentPage > userCrop.length / pageSize) {
-    //   console.log("Пиздец");
-    //   setCurrentPage((prevState) => prevState - 1);
-    // }
   };
 
   const handleBookmark = (id) => {
@@ -60,6 +55,7 @@ const UsersList = () => {
   const handleProfessionSelect = (user) => {
     setSellectedProf(user);
     setCurrentPage(1);
+    setSearchQuery("");
   };
 
   const handleOnSort = (item) => {
@@ -67,14 +63,32 @@ const UsersList = () => {
   };
 
   if (users) {
-    const filtredUsers = selectedProf
-      ? users.filter((user) => user.profession._id === selectedProf._id)
-      : users;
+    const filterUsers = () => {
+      if (selectedProf) {
+        return users.filter((user) => user.profession._id === selectedProf._id);
+      } else if (searchQuery) {
+        return users.filter((user) =>
+          user.name.includes(searchQuery.toLowerCase())
+        );
+      } else {
+        return users;
+      }
+    };
+
+    const filtredUsers = filterUsers();
+    // const filtredUsers = selectedProf
+    //   ? users.filter((user) => user.profession._id === selectedProf._id)
+    //   : users;
     const count = filtredUsers.length;
     const sortedUsers = _.orderBy(filtredUsers, [sortBy.path], [sortBy.order]);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
     // setUserCrop(paginate(sortedUsers, currentPage, pageSize));
     const clearFilter = () => setSellectedProf();
+
+    const handleSearchQueryChange = ({ target }) => {
+      setSearchQuery(target.value);
+      clearFilter();
+    };
 
     // Рендеринг
     if (users.length === 0) {
@@ -100,6 +114,14 @@ const UsersList = () => {
         </div>
 
         <div className="d-flex flex-column p-3 flex-grow-1">
+          <form className="">
+            <TextField
+              name="search"
+              value={searchQuery}
+              onChange={handleSearchQueryChange}
+              placeholder="Search..."
+            />
+          </form>
           <SearchStatus qtty={count} />
           {count > 0 && (
             <UsersTable
