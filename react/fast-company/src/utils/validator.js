@@ -1,5 +1,4 @@
 export function validator(data, config) {
-  console.log(config);
   const errors = {};
 
   function validate(validateMethod, data, config) {
@@ -35,10 +34,7 @@ export function validator(data, config) {
   }
 
   for (const fieldName in data) {
-    console.log(fieldName);
-
     for (const validateMethod in config[fieldName]) {
-      console.log("dsfasdfdsfa");
       const error = validate(
         validateMethod,
         data[fieldName],

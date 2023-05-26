@@ -20,7 +20,6 @@ const TextField = ({
 
   const toggleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
-    console.log("toggleShowPassword");
   };
   return (
     <div className="mb-3">

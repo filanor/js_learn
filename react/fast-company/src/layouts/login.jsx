@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import TextField from "../components/textField";
 import { validator } from "../utils/validator";
+import { stubFalse } from "lodash";
 
 const Login = () => {
   const [data, setData] = useState({ email: "", password: "" });
@@ -51,8 +52,7 @@ const Login = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     const isValid = validate();
-    if (!isValid) return;
-    console.log(e);
+    if (!isValid) return stubFalse;
   };
 
   return (
@@ -64,7 +64,7 @@ const Login = () => {
             <TextField
               label="Введите email"
               name="email"
-              value={data.login}
+              value={data.email}
               onChange={handleChange}
               error={errors.email}
             />
