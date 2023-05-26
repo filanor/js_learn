@@ -62,19 +62,21 @@ const UsersList = () => {
     setSortBy(item);
   };
 
-  if (users) {
-    const filterUsers = () => {
-      if (selectedProf) {
-        return users.filter((user) => user.profession._id === selectedProf._id);
-      } else if (searchQuery) {
-        return users.filter((user) =>
-          user.name.includes(searchQuery.toLowerCase())
-        );
-      } else {
-        return users;
-      }
-    };
+  const filterUsers = () => {
+    if (selectedProf) {
+      return users.filter((user) => user.profession._id === selectedProf._id);
+    } else if (searchQuery) {
+      return users.filter((user) => {
+        const name = user.name.toLowerCase();
+        // user.name.includes()
+        return name.includes(searchQuery.toLowerCase());
+      });
+    } else {
+      return users;
+    }
+  };
 
+  if (users) {
     const filtredUsers = filterUsers();
     // const filtredUsers = selectedProf
     //   ? users.filter((user) => user.profession._id === selectedProf._id)
