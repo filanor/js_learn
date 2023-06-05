@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
 
-import SearchStatus from "../components/searchStatus";
-import Pagination from "../components/pagination";
-import { paginate } from "../utils/paginate";
-import GroopList from "../components/groopList";
-import Loader from "../components/loader/loader";
-import api from "../api";
-import UsersTable from "../components/usersTable";
-import TextField from "./textField";
+import SearchStatus from "../../ui/searchStatus";
+import Pagination from "../../common/pagination";
+import { paginate } from "../../../utils/paginate";
+import GroopList from "../../common/groopList";
+import Loader from "../../common/loader";
+import api from "../../../api";
+import UsersTable from "../../ui/usersTable";
+import TextField from "../../common/form/textField";
 
-const UsersList = () => {
+const UsersListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [professions, setProfessions] = useState(api.professions.fetchAll());
   const [isProfessionsLoaded, setIsProfessionsLoaded] = useState(false);
@@ -26,6 +26,10 @@ const UsersList = () => {
       setUsers(data);
     });
   }, []);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedProf]);
 
   useEffect(() => {
     api.professions.fetchAll().then((data) => {
@@ -54,7 +58,7 @@ const UsersList = () => {
 
   const handleProfessionSelect = (user) => {
     setSellectedProf(user);
-    setCurrentPage(1);
+    // setCurrentPage(1);
     setSearchQuery("");
   };
 
@@ -78,9 +82,7 @@ const UsersList = () => {
 
   if (users) {
     const filtredUsers = filterUsers();
-    // const filtredUsers = selectedProf
-    //   ? users.filter((user) => user.profession._id === selectedProf._id)
-    //   : users;
+
     const count = filtredUsers.length;
     const sortedUsers = _.orderBy(filtredUsers, [sortBy.path], [sortBy.order]);
     const userCrop = paginate(sortedUsers, currentPage, pageSize);
@@ -100,48 +102,52 @@ const UsersList = () => {
     }
 
     return (
-      <div className="d-flex">
-        <div className="d-flex flex-column flex-shrink-1 p-3 justify-content-start">
-          {(!isProfessionsLoaded && <Loader />) || (
-            <GroopList
-              items={professions}
-              onItemSelect={handleProfessionSelect}
-              selectedItem={selectedProf}
-            />
-          )}
+      <div className="container">
+        <div className="row">
+          <div className="col-sm-12 d-flex justify-content-center">
+            <div className="d-flex flex-column flex-shrink-1 p-3 justify-content-start">
+              {(!isProfessionsLoaded && <Loader />) || (
+                <GroopList
+                  items={professions}
+                  onItemSelect={handleProfessionSelect}
+                  selectedItem={selectedProf}
+                />
+              )}
 
-          <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-            Очистить
-          </button>
-        </div>
+              <button className="btn btn-secondary mt-2" onClick={clearFilter}>
+                Очистить
+              </button>
+            </div>
 
-        <div className="d-flex flex-column p-3 flex-grow-1">
-          <form className="">
-            <TextField
-              name="search"
-              value={searchQuery}
-              onChange={handleSearchQueryChange}
-              placeholder="Search..."
-            />
-          </form>
-          <SearchStatus qtty={count} />
-          {count > 0 && (
-            <UsersTable
-              onSort={handleOnSort}
-              selectedSort={sortBy}
-              users={userCrop}
-              onDelete={handleDelete}
-              onBook={handleBookmark}
-            />
-          )}
+            <div className="d-flex flex-column p-3 flex-grow-1">
+              <form className="">
+                <TextField
+                  name="search"
+                  value={searchQuery}
+                  onChange={handleSearchQueryChange}
+                  placeholder="Search..."
+                />
+              </form>
+              <SearchStatus qtty={count} />
+              {count > 0 && (
+                <UsersTable
+                  onSort={handleOnSort}
+                  selectedSort={sortBy}
+                  users={userCrop}
+                  onDelete={handleDelete}
+                  onBook={handleBookmark}
+                />
+              )}
 
-          <div className="d-flex justify-content-center">
-            <Pagination
-              itemsCount={count}
-              pageSize={pageSize}
-              onPageChange={handlePageChange}
-              currentPage={currentPage}
-            />
+              <div className="d-flex justify-content-center">
+                <Pagination
+                  itemsCount={count}
+                  pageSize={pageSize}
+                  onPageChange={handlePageChange}
+                  currentPage={currentPage}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -157,4 +163,4 @@ const UsersList = () => {
 //   onBook: PropTypes.func.isRequired
 // };
 
-export default UsersList;
+export default UsersListPage;

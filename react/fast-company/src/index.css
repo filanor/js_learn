@@ -24,3 +24,7 @@ code {
 .main-div {
   width: 100%;
 }
+
+select {
+  cursor: pointer;
+}

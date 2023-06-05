@@ -6,19 +6,20 @@ import PropTypes from "prop-types";
 import Main from "./layouts/main";
 import Login from "./layouts/login";
 import Users from "./layouts/users";
-import NavBar from "./components/navBar";
-import UserPage from "./components/userPage";
+import NavBar from "./components/ui/navBar";
+import UserPage from "./components/pages/userPage/userPage";
+import EditUserPage from "./components/pages/editUserPage";
 
 const App = ({ location }) => {
-  console.log("location", location);
   return (
     <div className="main-div d-flex flex-column">
       <NavBar />
       <Switch>
         <Route exact path="/" component={Main} />
-        <Route path="/login" component={Login} />
+        <Route path="/login/:type?" component={Login} />
         <Route path="/user" component={UserPage} />
-        <Route path="/users/:userId?" component={Users} />
+        <Route exact path="/users/:userId?" component={Users} />
+        <Route path="/users/:userId?/edit" component={EditUserPage} />
         {/* <Users />; */}
       </Switch>
     </div>

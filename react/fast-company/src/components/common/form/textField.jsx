@@ -14,12 +14,17 @@ const TextField = ({
   const [showPassword, setShowPassword] = useState(false);
 
   id = id || name;
+
   const getInputClasses = () => {
     return "form-control" + (error ? " is-invalid" : "");
   };
 
   const toggleShowPassword = () => {
     setShowPassword((prevState) => !prevState);
+  };
+
+  const handleChange = ({ target }) => {
+    onChange({ name: target.name, value: target.value });
   };
   return (
     <div className="mb-3">
@@ -30,7 +35,7 @@ const TextField = ({
           id={id}
           name={name}
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
           className={getInputClasses()}
           placeholder={placeholder}
         />

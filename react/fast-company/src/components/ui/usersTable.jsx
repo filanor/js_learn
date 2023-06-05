@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Table from "./table/table";
+import Table from "../common/table";
 // import TableHeader from "./tableHeader";
 // import TableBody from "./tableBody";
-import Bookmark from "./bookmark";
-import QualitiesList from "./qualitiesList";
+import Bookmark from "../common/bookmark";
+import Qualities from "./qualities";
 import { Link } from "react-router-dom/cjs/react-router-dom.min";
 
 const UsersTable = ({
@@ -23,7 +23,7 @@ const UsersTable = ({
     },
     qualities: {
       name: "Качества",
-      component: (user) => <QualitiesList qualities={user.qualities} />
+      component: (user) => <Qualities qualities={user.qualities} />
     },
     professions: { path: "profession.name", name: "Профессия" },
     completedMeetings: { path: "completedMeetings", name: "Встретился, раз" },

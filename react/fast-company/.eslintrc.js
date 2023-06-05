@@ -16,7 +16,7 @@ module.exports = {
     "space-before-function-paren": [
       "error",
       { anonymous: "always", named: "never" }
-    ]
-    // "multiline-ternary": ["error", "never"]
+    ],
+    "multiline-ternary": ["off"]
   }
 };

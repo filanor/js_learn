@@ -2,8 +2,10 @@ import React from "react";
 
 const Main = () => {
   return (
-    <div className="container">
-      <h1>MAIN PAGE</h1>
+    <div className="mt-3 container">
+      <div className="row">
+        <h1 className="text-center">MAIN PAGE</h1>
+      </div>
     </div>
   );
 };
