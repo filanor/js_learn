@@ -4,51 +4,74 @@ import {
   useParams
 } from "react-router-dom/cjs/react-router-dom.min";
 import api from "../../../api";
-import TextField from "../../common/form/textField";
-import RadioField from "../../common/form/radioField";
-import MultiSelectField from "../../common/form/multiSelectField";
-import SelectField from "../../common/form/selectField";
-import { validator } from "../../../utils/validator";
+import FormComponent, {
+  TextField,
+  RadioField,
+  MultiSelectField,
+  SelectField
+} from "../../common/form";
+
 import Loader from "../../common/loader";
-import _ from "lodash";
 
 const EditUserPage = () => {
   const history = useHistory();
   const { userId } = useParams();
 
-  const [errors, setErrors] = useState({});
   const [professions, setProfessions] = useState();
   const [qualities, setQualities] = useState({});
-  const [user, setUser] = useState();
-  useEffect(() => {
-    api.users.getById(userId).then((user) => {
-      setUser(user);
-    });
-    api.qualities.fetchAll().then((data) => setQualities(data));
-    api.professions.fetchAll().then((data) => setProfessions(data));
-  }, []);
-
-  const handleChange = (target) => {
-    let value;
-    if (target.name === "profession") {
-      value = _.find(professions, { _id: target.value });
-    } else if (target.name === "qualities") {
-      console.log("target.value", target.value);
-      value = target.value.map((qual) => {
-        return _.find(qualities, { _id: qual.value });
-      });
-      console.log("handleChange", user);
-    } else {
-      value = target.value;
-    }
-    setUser((prevState) => ({ ...prevState, [target.name]: value }));
+  const [data, setData] = useState();
+  const transformData = (data) => {
+    return data.map((qual) => ({ label: qual.name, value: qual._id }));
   };
 
-  const validate = () => {
-    const errors = validator(user, validateConfig);
+  useEffect(() => {
+    // setIsLoading(true);
+    api.users.getById(userId).then(({ profession, qualities, ...data }) =>
+      setData((prevState) => ({
+        ...prevState,
+        ...data,
+        qualities: transformData(qualities),
+        profession: profession._id
+      }))
+    );
+    api.professions.fetchAll().then((data) => {
+      const professionsList = Object.keys(data).map((professionName) => ({
+        label: data[professionName].name,
+        value: data[professionName]._id
+      }));
+      setProfessions(professionsList);
+    });
+    api.qualities.fetchAll().then((data) => {
+      const qualitiesList = Object.keys(data).map((optionName) => ({
+        value: data[optionName]._id,
+        label: data[optionName].name,
+        color: data[optionName].color
+      }));
+      setQualities(qualitiesList);
+    });
+  }, []);
 
-    setErrors(errors);
-    return Object.keys(errors).length === 0;
+  const getProfessionById = (id) => {
+    for (const prof of professions) {
+      if (prof.value === id) {
+        return { _id: prof.value, name: prof.label };
+      }
+    }
+  };
+  const getQualities = (elements) => {
+    const qualitiesArray = [];
+    elements.forEach((elem) => {
+      for (const quality in qualities) {
+        if (elem.value === qualities[quality].value) {
+          qualitiesArray.push({
+            _id: qualities[quality].value,
+            name: qualities[quality].label,
+            color: qualities[quality].color
+          });
+        }
+      }
+    });
+    return qualitiesArray;
   };
 
   const validateConfig = {
@@ -87,82 +110,77 @@ const EditUserPage = () => {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const isValid = validate();
-    if (!isValid) return false;
-    api.users.update(userId, user);
-    history.goBack();
+  const handleSubmit = (newData) => {
+    const { profession, qualities } = newData;
+
+    const dataToUpdate = {
+      ...newData,
+      profession: getProfessionById(profession),
+      qualities: getQualities(qualities)
+    };
+
+    api.users
+      .update(userId, {
+        ...dataToUpdate
+      })
+      .then((data) => history.push(`/users/${data._id}`));
   };
 
-  if (user) {
+  if (data && professions && qualities) {
     return (
-      user && (
-        <div className="mt-3 container">
-          <div className="row">
-            <div className="col-md-6 offset-md-3 shadow p-3">
-              <h1>Cтраница редактирования пользователя</h1>
-              <form onSubmit={handleSubmit}>
-                <TextField
-                  value={user.name}
-                  label="Имя"
-                  name="name"
-                  onChange={handleChange}
-                />
-                <TextField
-                  label="Email"
-                  name="email"
-                  value={user.email}
-                  onChange={handleChange}
-                  error={errors.email}
-                />
-                <SelectField
-                  options={professions}
-                  label="Выбирите профессию"
-                  name="profession"
-                  // defaultOption={user.profession._id}
-                  onChange={handleChange}
-                  value={user.profession._id}
-                  error={errors.profession}
-                />
-                <RadioField
-                  label="Выберите пол"
-                  onChange={handleChange}
-                  value={user.sex}
-                  name="sex"
-                  options={[
-                    { name: "Мужской", value: "male" },
-                    { name: "Женский", value: "female" },
-                    { name: "Пока не решил", value: "other" }
-                  ]}
-                />
-                <MultiSelectField
-                  options={qualities}
-                  value={user.qualities}
-                  defaultOptions={user.qualities}
-                  onChange={handleChange}
-                  name="qualities"
-                  label="Выберите качества"
-                />
-                <button
-                  className="d-block btn-primary w-50 mx-auto mb-3 p-1"
-                  type="submit"
-                >
-                  Изменить
-                </button>
-              </form>
-            </div>
+      <div className="mt-3 container">
+        <div className="row">
+          <div className="col-md-6 offset-md-3 shadow p-3">
+            <h1>Cтраница редактирования пользователя</h1>
+            <FormComponent
+              onSubmit={handleSubmit}
+              validatorConfig={validateConfig}
+            >
+              <TextField
+                label="Имя"
+                name="name"
+                defaultValue={data.name}
+                autoFocus
+              />
+              <TextField label="Email" name="email" defaultValue={data.email} />
+              <SelectField
+                options={professions}
+                label="Выбирите профессию"
+                name="profession"
+                defaultValue={data.profession}
+                defaultOption={getProfessionById(data.profession)}
+              />
+              <RadioField
+                label="Выберите пол"
+                name="sex"
+                defaultValue={data.sex}
+                options={[
+                  { name: "Мужской", value: "male" },
+                  { name: "Женский", value: "female" },
+                  { name: "Пока не решил", value: "other" }
+                ]}
+              />
+              <MultiSelectField
+                options={qualities}
+                defaultValue={data.qualities || []}
+                defaultOptions={data.qualities || []}
+                name="qualities"
+                label="Выберите качества"
+              />
+              <button
+                className="d-block btn btn-primary w-50 mx-auto mb-3 p-1"
+                type="submit"
+              >
+                Изменить
+              </button>
+            </FormComponent>
           </div>
         </div>
-      )
+      </div>
     );
   } else {
     return <Loader />;
   }
 };
-
-// EditUserPage.propTypes = {
-//   // id: PropTypes.string.isRequired
-// };
 
 export default EditUserPage;

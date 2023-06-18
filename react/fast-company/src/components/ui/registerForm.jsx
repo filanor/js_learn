@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from "react";
 import TextField from "../common/form/textField";
 import { validator } from "../../utils/validator";
-import SelectField from "../common/form/selectField";
+import {
+  SelectField,
+  RadioField,
+  MultiSelectField,
+  CheckboxField
+} from "../common/form";
+
 import api from "../../api";
-import RadioField from "../common/form/radioField";
-import MultiSelectField from "../common/form/multiSelectField";
-import CheckboxField from "../common/form/checkboxField";
 
 const RegisterForm = () => {
   const [errors, setErrors] = useState({});

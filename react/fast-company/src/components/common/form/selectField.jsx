@@ -14,7 +14,7 @@ const SelectField = ({
   let optionsArray = [];
   if (!Array.isArray(options) && typeof options === "object") {
     optionsArray = Object.keys(options).map((optionName) => ({
-      name: options[optionName].name,
+      label: options[optionName].name,
       value: options[optionName]._id
     }));
   } else {
@@ -39,14 +39,14 @@ const SelectField = ({
         onChange={handleChange}
         value={value}
       >
-        <option value="" disabled>
-          {defaultOption}
-        </option>
+        {/* <option value={defaultOption.value} disabled>
+          {defaultOption.label}
+        </option> */}
 
         {optionsArray &&
           optionsArray.map((option) => (
             <option key={option.value} value={option.value}>
-              {option.name}
+              {option.label}
             </option>
           ))}
       </select>
@@ -63,7 +63,7 @@ SelectField.defaultProps = {
 SelectField.propTypes = {
   options: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   label: PropTypes.string,
-  defaultOption: PropTypes.string,
+  defaultOption: PropTypes.object,
   classes: PropTypes.string,
   name: PropTypes.string,
   value: PropTypes.string,
@@ -71,4 +71,4 @@ SelectField.propTypes = {
   error: PropTypes.string
 };
 
-export default SelectField;
+export default React.memo(SelectField);

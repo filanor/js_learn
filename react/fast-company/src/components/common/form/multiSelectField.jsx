@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Select from "react-select";
-import { toArray } from "../../../utils/toArray";
 
 const MultiSelectField = ({
   options,
@@ -10,30 +9,27 @@ const MultiSelectField = ({
   label,
   defaultOptions
 }) => {
-  const optionsArray = toArray(options);
-  let defaultOptionsArray = [];
-  if (defaultOptions) {
-    defaultOptionsArray = toArray(defaultOptions);
-  }
-
   const handleChange = (value) => {
     onChange({ name: name, value });
   };
+  console.log(typeof onChange);
 
   return (
-    <div className="mb-3">
-      {label && <label htmlFor={name}>{label}</label>}
-      <Select
-        closeMenuOnSelect={false}
-        isMulti
-        options={optionsArray}
-        defaultValue={defaultOptionsArray}
-        className="basic-multi-select"
-        classNamePrefix="select"
-        onChange={handleChange}
-        name={name}
-      />
-    </div>
+    { options } && (
+      <div className="mb-3">
+        {label && <label htmlFor={name}>{label}</label>}
+        <Select
+          closeMenuOnSelect={false}
+          isMulti
+          options={options}
+          defaultValue={defaultOptions}
+          className="basic-multi-select"
+          classNamePrefix="select"
+          onChange={handleChange}
+          name={name}
+        />
+      </div>
+    )
   );
 };
 
@@ -45,4 +41,4 @@ MultiSelectField.propTypes = {
   defaultOptions: PropTypes.oneOfType([PropTypes.array, PropTypes.object])
 };
 
-export default MultiSelectField;
+export default React.memo(MultiSelectField);
