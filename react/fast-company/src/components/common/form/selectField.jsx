@@ -39,9 +39,9 @@ const SelectField = ({
         onChange={handleChange}
         value={value}
       >
-        {/* <option value={defaultOption.value} disabled>
+        <option value={defaultOption.value} disabled>
           {defaultOption.label}
-        </option> */}
+        </option>
 
         {optionsArray &&
           optionsArray.map((option) => (
@@ -56,7 +56,7 @@ const SelectField = ({
 };
 
 SelectField.defaultProps = {
-  defaultOption: "Выберите...",
+  defaultOption: { value: "", label: "Выберите..." },
   classes: "form-select"
 };
 

@@ -18,8 +18,14 @@ const EditUserPage = () => {
   const { userId } = useParams();
 
   const [professions, setProfessions] = useState();
-  const [qualities, setQualities] = useState({});
-  const [data, setData] = useState();
+  const [qualities, setQualities] = useState([]);
+  const [data, setData] = useState({
+    name: "",
+    email: "",
+    profession: "",
+    sex: "",
+    qualities: []
+  });
   const transformData = (data) => {
     return data.map((qual) => ({ label: qual.name, value: qual._id }));
   };
@@ -135,25 +141,26 @@ const EditUserPage = () => {
             <FormComponent
               onSubmit={handleSubmit}
               validatorConfig={validateConfig}
+              defaultData={data}
             >
               <TextField
                 label="Имя"
                 name="name"
-                defaultValue={data.name}
+                // defaultValue={data.name}
                 autoFocus
               />
-              <TextField label="Email" name="email" defaultValue={data.email} />
+              <TextField label="Email" name="email" />
               <SelectField
                 options={professions}
                 label="Выбирите профессию"
                 name="profession"
-                defaultValue={data.profession}
+                // defaultValue={data.profession}
                 defaultOption={getProfessionById(data.profession)}
               />
               <RadioField
                 label="Выберите пол"
                 name="sex"
-                defaultValue={data.sex}
+                // defaultValue={data.sex}
                 options={[
                   { name: "Мужской", value: "male" },
                   { name: "Женский", value: "female" },
@@ -162,7 +169,7 @@ const EditUserPage = () => {
               />
               <MultiSelectField
                 options={qualities}
-                defaultValue={data.qualities || []}
+                // defaultValue={data.qualities || []}
                 defaultOptions={data.qualities || []}
                 name="qualities"
                 label="Выберите качества"

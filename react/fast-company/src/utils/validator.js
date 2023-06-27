@@ -35,6 +35,7 @@ export function validator(data, config) {
         break;
     }
     if (statusValidation) return config.message;
+    return null;
   }
 
   for (const fieldName in data) {
@@ -48,6 +49,12 @@ export function validator(data, config) {
       if (error && !errors[fieldName]) {
         errors[fieldName] = error;
       }
+    }
+  }
+
+  for (const ruleName in config) {
+    if (!data[ruleName]) {
+      errors[ruleName] = "Поле обязательно для заполнения";
     }
   }
 
