@@ -24,11 +24,15 @@ const Comment = ({
     if (yearDif === 0) {
       const dayDif = now.getDay() - date.getDay();
       if (dayDif === 0) {
-        const minDif = now.getMinutes() - date.getMinutes();
-        if (minDif >= 0 && minDif < 5) return "1 минуту назад";
-        if (minDif >= 5 && minDif < 10) return "5 минут назад";
-        if (minDif >= 10 && minDif < 30) return "10 минут назад";
-        return "30 минут назад";
+        const hourDif = now.getHours() - date.getHours();
+        if (hourDif === 0) {
+          const minDif = now.getMinutes() - date.getMinutes();
+          if (minDif >= 0 && minDif < 5) return "1 минуту назад";
+          if (minDif >= 5 && minDif < 10) return "5 минут назад";
+          if (minDif >= 10 && minDif < 30) return "10 минут назад";
+          return "30 минут назад";
+        }
+        return `${date.getHours()}:${date.getMinutes()}`;
       }
       return `${date.getDay()} ${date.toLocaleString("default", {
         month: "long"

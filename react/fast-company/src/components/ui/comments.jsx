@@ -29,6 +29,16 @@ const Comments = ({ userId }) => {
       );
   };
 
+  console.log("before", comments);
+  const sortArr = (a, b) => {
+    if (a.created_at < b.created_at) return 1;
+    if (a.created_at === b.created_at) return 0;
+    if (a.created_at > b.created_at) return -1;
+  };
+  comments.sort(sortArr);
+
+  console.log("after", comments);
+
   return (
     <>
       <CardWrap>
