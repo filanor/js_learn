@@ -6,58 +6,47 @@ import Pagination from "../../common/pagination";
 import { paginate } from "../../../utils/paginate";
 import GroopList from "../../common/groopList";
 import Loader from "../../common/loader";
-import api from "../../../api";
 import UsersTable from "../../ui/usersTable";
-import TextField from "../../common/form/textField";
+
+import { useUser } from "../../../hooks/useUsers";
+import { useProfessions } from "../../../hooks/useProfession";
+// import FormComponent from "../../common/form";
 
 const UsersListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [professions, setProfessions] = useState(api.professions.fetchAll());
-  const [isProfessionsLoaded, setIsProfessionsLoaded] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedProf, setSellectedProf] = useState();
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const pageSize = 8;
 
-  const [users, setUsers] = useState();
-
-  useEffect(() => {
-    api.users.fetchAll().then((data) => {
-      setUsers(data);
-    });
-  }, []);
+  const { users } = useUser();
+  const { professions } = useProfessions();
 
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedProf]);
 
-  useEffect(() => {
-    api.professions.fetchAll().then((data) => {
-      setProfessions(data);
-      setIsProfessionsLoaded(true);
-    });
-  }, []);
-
   const handleDelete = (id) => {
-    setUsers((prevState) => prevState.filter((user) => user._id !== id));
+    // setUsers((prevState) => prevState.filter((user) => user._id !== id));
+    console.log(id);
   };
 
   const handleBookmark = (id) => {
-    setUsers(
-      users.map((user) => {
-        return user._id === id
-          ? { ...user, bookmark: !user.bookmark }
-          : { ...user };
-      })
-    );
+    // const newArray =
+    users.map((user) => {
+      return user._id === id
+        ? { ...user, bookmark: !user.bookmark }
+        : { ...user };
+    });
+    // setUsers(newArray);
   };
 
   const handlePageChange = (pageIndex) => {
     setCurrentPage(pageIndex);
   };
 
-  const handleProfessionSelect = (user) => {
-    setSellectedProf(user);
+  const handleProfessionSelect = (prof) => {
+    setSellectedProf(prof);
     // setCurrentPage(1);
     setSearchQuery("");
   };
@@ -68,11 +57,10 @@ const UsersListPage = () => {
 
   const filterUsers = () => {
     if (selectedProf) {
-      return users.filter((user) => user.profession._id === selectedProf._id);
+      return users.filter((user) => user.profession === selectedProf._id);
     } else if (searchQuery) {
       return users.filter((user) => {
         const name = user.name.toLowerCase();
-        // user.name.includes()
         return name.includes(searchQuery.toLowerCase());
       });
     } else {
@@ -106,13 +94,13 @@ const UsersListPage = () => {
         <div className="row">
           <div className="col-sm-12 d-flex justify-content-center">
             <div className="d-flex flex-column flex-shrink-1 p-3 justify-content-start">
-              {(!isProfessionsLoaded && <Loader />) || (
-                <GroopList
-                  items={professions}
-                  onItemSelect={handleProfessionSelect}
-                  selectedItem={selectedProf}
-                />
-              )}
+              {/* {(!isProfessionsLoaded && <Loader />) || ( */}
+              <GroopList
+                items={professions}
+                onItemSelect={handleProfessionSelect}
+                selectedItem={selectedProf}
+              />
+              {/* )} */}
 
               <button className="btn btn-secondary mt-2" onClick={clearFilter}>
                 Очистить
@@ -120,14 +108,13 @@ const UsersListPage = () => {
             </div>
 
             <div className="d-flex flex-column p-3 flex-grow-1">
-              <form className="">
-                <TextField
-                  name="search"
-                  value={searchQuery}
-                  onChange={handleSearchQueryChange}
-                  placeholder="Search..."
-                />
-              </form>
+              <input
+                name="search"
+                value={searchQuery}
+                onChange={handleSearchQueryChange}
+                placeholder="Search..."
+                className="form-control mb-2"
+              />
               <SearchStatus qtty={count} />
               {count > 0 && (
                 <UsersTable

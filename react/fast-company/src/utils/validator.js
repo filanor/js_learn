@@ -8,7 +8,7 @@ export function validator(data, config) {
         if (typeof data === "boolean") {
           statusValidation = !data;
         } else {
-          statusValidation = data === "";
+          statusValidation = data.trim() === "";
         }
         break;
       }
@@ -38,23 +38,25 @@ export function validator(data, config) {
     return null;
   }
 
-  for (const fieldName in data) {
-    for (const validateMethod in config[fieldName]) {
-      const error = validate(
-        validateMethod,
-        data[fieldName],
-        config[fieldName][validateMethod]
-      );
+  if (config) {
+    for (const fieldName in data) {
+      for (const validateMethod in config[fieldName]) {
+        const error = validate(
+          validateMethod,
+          data[fieldName],
+          config[fieldName][validateMethod]
+        );
 
-      if (error && !errors[fieldName]) {
-        errors[fieldName] = error;
+        if (error && !errors[fieldName]) {
+          errors[fieldName] = error;
+        }
       }
     }
-  }
 
-  for (const ruleName in config) {
-    if (!data[ruleName]) {
-      errors[ruleName] = "Поле обязательно для заполнения";
+    for (const ruleName in config) {
+      if (!data[ruleName]) {
+        errors[ruleName] = "Поле обязательно для заполнения";
+      }
     }
   }
 

@@ -69,7 +69,7 @@ const FormComponent = ({
 
       config = {
         ...child.props,
-        onChange: handleChange,
+        onChange: child.props.onChange ? child.props.onChange : handleChange,
         value: data[child.props.name] || "",
         error: errors[child.props.name],
         onKeyDown: handleKeydown

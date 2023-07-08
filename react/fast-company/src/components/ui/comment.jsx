@@ -17,8 +17,6 @@ const Comment = ({
   const getdate = () => {
     const now = new Date();
     const date = new Date(Number(created));
-    console.log(created);
-    console.log(date);
 
     const yearDif = now.getFullYear() - date.getFullYear();
     if (yearDif === 0) {
@@ -39,7 +37,6 @@ const Comment = ({
       })}`;
     }
 
-    console.log(date);
     return (
       date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDate()
     );

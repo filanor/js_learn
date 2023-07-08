@@ -20,7 +20,7 @@ const AddComment = ({ onAddComment }) => {
   const validateConfig = {
     content: {
       isRequired: {
-        message: "Email обязателен для заполнения"
+        message: "Сообщение не может быть пустым"
       }
     },
     userId: {

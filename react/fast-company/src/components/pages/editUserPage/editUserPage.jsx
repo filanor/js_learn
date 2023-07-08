@@ -89,29 +89,10 @@ const EditUserPage = () => {
         message: "Email введен не корректно"
       }
     },
-    password: {
-      isRequired: {
-        message: "Пароль обязателен для заполнения"
-      },
-      isCapitalSymbol: {
-        message: "Пароль должен содержать заглавную букву"
-      },
-      isContainNumber: {
-        message: "Пароль должен содержать цифру"
-      },
-      min: {
-        message: "минимальный размер пароля 8 символов",
-        value: 8
-      }
-    },
+
     profession: {
       isRequired: {
         message: "Поле обязательно для заполнения"
-      }
-    },
-    licence: {
-      isRequired: {
-        message: "Для работы с сервисом обязательно принять условия"
       }
     }
   };
@@ -174,12 +155,21 @@ const EditUserPage = () => {
                 name="qualities"
                 label="Выберите качества"
               />
-              <button
-                className="d-block btn btn-primary w-50 mx-auto mb-3 p-1"
-                type="submit"
-              >
-                Изменить
-              </button>
+              <div className="d-flex gap-3">
+                <button
+                  type="button"
+                  className="d-block btn btn-secondary w-50 mx-auto mb-3 p-1"
+                  onClick={() => history.push(`/users/${data._id}`)}
+                >
+                  Отмена
+                </button>
+                <button
+                  className="d-block btn btn-primary w-50 mx-auto mb-3 p-1"
+                  type="submit"
+                >
+                  Изменить
+                </button>
+              </div>
             </FormComponent>
           </div>
         </div>

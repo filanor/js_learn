@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import api from "../../../api";
 import Loader from "../../common/loader";
 import QualitiesList from "../../ui/qualities/qualitiesList";
 import { Link } from "react-router-dom";
 import CardWrap from "../../common/Card";
 import Comments from "../../ui/comments";
+import { useUser } from "../../../hooks/useUsers";
+
+import Profession from "../../ui/profession";
 
 const UserPage = ({ id }) => {
-  const [user, setUser] = useState();
+  const [user, setUser] = useState(null);
+  const { getUserById } = useUser();
 
   useEffect(() => {
-    api.users.getById(id).then((user) => {
-      setUser(user);
-    });
+    const data = getUserById(id);
+    setUser(data);
   }, []);
 
   const render = () => {
@@ -38,7 +40,12 @@ const UserPage = ({ id }) => {
                   width="150"
                 />
                 <h1>{user.name}</h1>
-                <p className="text-secondary mb-1">{user.profession.name}</p>
+
+                <Profession
+                  id={user.profession}
+                  classes="text-secondary mb-1"
+                />
+
                 <div className="text-muted">
                   <i
                     className="bi bi-caret-down-fill text-primary"
@@ -59,7 +66,7 @@ const UserPage = ({ id }) => {
                   <span>Qualities</span>
                 </h5>
                 <p className="card-text">
-                  <QualitiesList qualities={user.qualities} />
+                  <QualitiesList userQualities={user.qualities} />
                 </p>
               </div>
             </CardWrap>
@@ -84,7 +91,10 @@ const UserPage = ({ id }) => {
       </div>
     );
   };
-  return (user && render()) || <Loader />;
+  if (user) {
+    return render();
+  }
+  return <Loader />;
 };
 
 UserPage.propTypes = {

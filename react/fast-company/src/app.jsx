@@ -9,19 +9,31 @@ import Users from "./layouts/users";
 import NavBar from "./components/ui/navBar";
 import UserPage from "./components/pages/userPage/userPage";
 import EditUserPage from "./components/pages/editUserPage";
+import { ToastContainer } from "react-toastify";
+
+import "react-toastify/dist/ReactToastify.css";
+import { ProfessionProvider } from "./hooks/useProfession";
+import { QualityProvider } from "./hooks/useQuality";
 
 const App = ({ location }) => {
   return (
     <div className="main-div d-flex flex-column">
       <NavBar />
-      <Switch>
-        <Route exact path="/" component={Main} />
-        <Route path="/login/:type?" component={Login} />
-        <Route path="/user" component={UserPage} />
-        <Route exact path="/users/:userId?" component={Users} />
-        <Route path="/users/:userId?/edit" component={EditUserPage} />
-        {/* <Users />; */}
-      </Switch>
+      <ProfessionProvider>
+        <QualityProvider>
+          <Switch>
+            <Route exact path="/" component={Main} />
+
+            <Route path="/login/:type?" component={Login} />
+            <Route path="/user" component={UserPage} />
+            <Route exact path="/users/:userId?" component={Users} />
+            <Route path="/users/:userId?/edit" component={EditUserPage} />
+
+            {/* <Users />; */}
+          </Switch>
+        </QualityProvider>
+      </ProfessionProvider>
+      <ToastContainer />
     </div>
   );
 };
