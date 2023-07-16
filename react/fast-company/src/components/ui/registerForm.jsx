@@ -8,12 +8,22 @@ import {
   CheckboxField
 } from "../common/form";
 
-import api from "../../api";
+import { useProfessions } from "../../hooks/useProfession";
+import { useQuality } from "../../hooks/useQuality";
+import { useAuth } from "../../hooks/useAuth";
+import { useHistory } from "react-router-dom";
 
 const RegisterForm = () => {
+  const history = useHistory();
+  const { signUp } = useAuth();
   const [errors, setErrors] = useState({});
-  const [professions, setProfessions] = useState();
-  const [qualities, setQualities] = useState({});
+  const { professions } = useProfessions();
+  const professionsList = professions.map((p) => ({
+    value: p._id,
+    label: p.name
+  }));
+  const { qualities } = useQuality();
+  const qualitiesList = qualities.map((q) => ({ value: q._id, label: q.name }));
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -22,11 +32,6 @@ const RegisterForm = () => {
     qualities: [],
     licence: false
   });
-
-  useEffect(() => {
-    api.qualities.fetchAll().then((data) => setQualities(data));
-    api.professions.fetchAll().then((data) => setProfessions(data));
-  }, []);
 
   const validateConfig = {
     email: {
@@ -80,77 +85,87 @@ const RegisterForm = () => {
     setData((prevState) => ({ ...prevState, [target.name]: target.value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const isValid = validate();
     if (!isValid) return false;
-    console.log(data);
+    const newData = { ...data, qualities: data.qualities.map((q) => q.value) };
+    try {
+      await signUp(newData);
+      history.push("/");
+    } catch (error) {
+      setErrors(error);
+      // /console.log(error);
+    }
   };
 
   return (
-    <>
-      <h3 className="mb-4 text-center">Register</h3>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Введите email"
-          name="email"
-          value={data.email}
-          onChange={handleChange}
-          error={errors.email}
-        />
-        <TextField
-          type="password"
-          label="Введите пароль"
-          name="password"
-          value={data.password}
-          onChange={handleChange}
-          error={errors.password}
-        />
-        <SelectField
-          options={professions}
-          label="Выбирите профессию"
-          name="profession"
-          onChange={handleChange}
-          value={data.profession}
-          error={errors.profession}
-        />
-        <RadioField
-          label="Выберите пол"
-          onChange={handleChange}
-          value={data.sex}
-          name="sex"
-          options={[
-            { name: "Мужской", value: "male" },
-            { name: "Женский", value: "female" },
-            { name: "Пока не решил", value: "other" }
-          ]}
-        />
-        <MultiSelectField
-          options={qualities}
-          onChange={handleChange}
-          name="qualities"
-          label="Выберите качества"
-        />
+    professions &&
+    qualities && (
+      <>
+        <h3 className="mb-4 text-center">Register</h3>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Введите email"
+            name="email"
+            value={data.email}
+            onChange={handleChange}
+            error={errors.email}
+          />
+          <TextField
+            type="password"
+            label="Введите пароль"
+            name="password"
+            value={data.password}
+            onChange={handleChange}
+            error={errors.password}
+          />
+          <SelectField
+            options={professionsList}
+            label="Выбирите профессию"
+            name="profession"
+            onChange={handleChange}
+            value={data.profession}
+            error={errors.profession}
+          />
+          <RadioField
+            label="Выберите пол"
+            onChange={handleChange}
+            value={data.sex}
+            name="sex"
+            options={[
+              { name: "Мужской", value: "male" },
+              { name: "Женский", value: "female" },
+              { name: "Пока не решил", value: "other" }
+            ]}
+          />
+          <MultiSelectField
+            options={qualitiesList}
+            onChange={handleChange}
+            name="qualities"
+            label="Выберите качества"
+          />
 
-        <CheckboxField
-          name="licence"
-          error={errors.licence}
-          value={data.licence}
-          onChange={handleChange}
-        >
-          <p>
-            Я согласен с <a href="/">лицензионным соглашением</a>
-          </p>
-        </CheckboxField>
-        <button
-          disabled={!isValid}
-          className="d-block btn-primary w-50 mx-auto mb-3 p-1"
-          type="submit"
-        >
-          Зарегистрироваться
-        </button>
-      </form>
-    </>
+          <CheckboxField
+            name="licence"
+            error={errors.licence}
+            value={data.licence}
+            onChange={handleChange}
+          >
+            <p>
+              Я согласен с <a href="/">лицензионным соглашением</a>
+            </p>
+          </CheckboxField>
+          <button
+            disabled={!isValid}
+            className="d-block btn-primary w-50 mx-auto mb-3 p-1"
+            type="submit"
+          >
+            Зарегистрироваться
+          </button>
+        </form>
+      </>
+    )
   );
 };
 

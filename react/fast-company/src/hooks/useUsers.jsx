@@ -15,17 +15,6 @@ const UserProvider = ({ children }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    getUsers();
-  }, []);
-
-  useEffect(() => {
-    if (error !== null) {
-      toast.error(error);
-      setError(null);
-    }
-  }, [error]);
-
   async function getUsers() {
     try {
       const { content } = await userService.get();
@@ -42,6 +31,17 @@ const UserProvider = ({ children }) => {
   function getUserById(id) {
     return users.find((user) => user._id === id);
   }
+
+  useEffect(() => {
+    getUsers();
+  }, []);
+
+  useEffect(() => {
+    if (error !== null) {
+      toast.error(error);
+      setError(null);
+    }
+  }, [error]);
 
   return (
     <UserContext.Provider value={{ users, getUserById }}>

@@ -40,6 +40,7 @@ export const QualityProvider = ({ children }) => {
   }
 
   function errorCatcher(error) {
+    console.log(error);
     const msg = error.response.data;
     setError(msg);
   }

@@ -13,10 +13,11 @@ const SelectField = ({
 }) => {
   let optionsArray = [];
   if (!Array.isArray(options) && typeof options === "object") {
-    optionsArray = Object.keys(options).map((optionName) => ({
-      label: options[optionName].name,
-      value: options[optionName]._id
-    }));
+    // optionsArray = Object.keys(options).map((optionName) => ({
+    //   label: options[optionName].name,
+    //   value: options[optionName]._id
+    // }));
+    optionsArray = Object.values(options);
   } else {
     optionsArray = options;
   }
@@ -43,7 +44,7 @@ const SelectField = ({
           {defaultOption.label}
         </option>
 
-        {optionsArray &&
+        {optionsArray.length > 0 &&
           optionsArray.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}

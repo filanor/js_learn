@@ -1,6 +1,6 @@
 import httpService from "./http.serviсe";
 
-const professionEndpoint = "profession/";
+const professionEndpoint = "professions/";
 
 const professionService = {
   get: async () => {

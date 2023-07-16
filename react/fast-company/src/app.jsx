@@ -14,25 +14,29 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { ProfessionProvider } from "./hooks/useProfession";
 import { QualityProvider } from "./hooks/useQuality";
+import AuthProvider from "./hooks/useAuth";
 
-const App = ({ location }) => {
+const App = () => {
   return (
     <div className="main-div d-flex flex-column">
-      <NavBar />
-      <ProfessionProvider>
-        <QualityProvider>
-          <Switch>
-            <Route exact path="/" component={Main} />
+      <AuthProvider>
+        <NavBar />
+        <ProfessionProvider>
+          <QualityProvider>
+            <Switch>
+              <Route exact path="/" component={Main} />
 
-            <Route path="/login/:type?" component={Login} />
-            <Route path="/user" component={UserPage} />
-            <Route exact path="/users/:userId?" component={Users} />
-            <Route path="/users/:userId?/edit" component={EditUserPage} />
+              <Route path="/login/:type?" component={Login} />
+              <Route path="/user" component={UserPage} />
+              <Route exact path="/users/:userId?" component={Users} />
+              <Route path="/users/:userId?/edit" component={EditUserPage} />
 
-            {/* <Users />; */}
-          </Switch>
-        </QualityProvider>
-      </ProfessionProvider>
+              {/* <Users />; */}
+            </Switch>
+          </QualityProvider>
+        </ProfessionProvider>
+      </AuthProvider>
+
       <ToastContainer />
     </div>
   );
