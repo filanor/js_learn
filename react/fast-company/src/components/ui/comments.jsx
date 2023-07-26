@@ -1,35 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import api from "../../api";
+import { orderBy } from "lodash";
+
 import CommentsList from "../common/comments/commentsList";
 import AddComment from "../common/comments/addComment";
 import CardWrap from "../common/Card";
+import { useComments } from "../../hooks/useComents";
 
 const Comments = ({ userId }) => {
-  const [comments, setComments] = useState();
-
-  useEffect(() => {
-    api.comments
-      .fetchCommentsForUser(userId)
-      .then((comments) => setComments(comments));
-  }, []);
+  // const [comments, setComments] = useState();
+  const { comments, createComments, removeComments } = useComments();
 
   const handleAddComment = (comment) => {
-    const newComment = { ...comment, pageId: userId };
-    api.comments.add(newComment).then((data) => {
-      setComments((prevComments) => [...prevComments, data]);
-    });
+    createComments(comment);
+    // const newComment = { ...comment, pageId: userId };
+    // api.comments.add(newComment).then((data) => {
+    //   setComments((prevComments) => [...prevComments, data]);
+    // });
   };
 
   const handleDeleteComment = (commentID) => {
-    api.comments
-      .remove(commentID)
-      .then((id) =>
-        setComments((prevComments) => prevComments.filter((x) => x._id !== id))
-      );
+    removeComments(commentID);
+    // api.comments.remove(commentID);
+    // .then((id) =>
+    //   // setComments((prevComments) => prevComments.filter((x) => x._id !== id))
+    // );
   };
 
-  comments?.sort((a, b) => b.created_at - a.created_at);
+  const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
 
   return (
     <>
@@ -41,7 +39,10 @@ const Comments = ({ userId }) => {
         <CardWrap>
           <h2>Comments</h2>
           <hr />
-          <CommentsList comments={comments} onDelete={handleDeleteComment} />
+          <CommentsList
+            comments={sortedComments}
+            onDelete={handleDeleteComment}
+          />
         </CardWrap>
       )}
     </>

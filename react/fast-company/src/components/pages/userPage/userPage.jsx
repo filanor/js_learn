@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import Loader from "../../common/loader";
-import QualitiesList from "../../ui/qualities/qualitiesList";
+// import Loader from "../../common/loader";
 import { Link } from "react-router-dom";
 import CardWrap from "../../common/Card";
 import Comments from "../../ui/comments";
-import { useUser } from "../../../hooks/useUsers";
-
+import CommentsProvider from "../../../hooks/useComents";
 import Profession from "../../ui/profession";
+import QualitiesList from "../../ui/qualities/qualitiesList";
+
+import { useUser } from "../../../hooks/useUsers";
+import { useAuth } from "../../../hooks/useAuth";
 
 const UserPage = ({ id }) => {
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
+  const { currentUser } = useAuth();
   const { getUserById } = useUser();
-
-  useEffect(() => {
-    const data = getUserById(id);
-    setUser(data);
-  }, []);
+  const user = getUserById(id);
 
   const render = () => {
     return (
@@ -24,21 +23,15 @@ const UserPage = ({ id }) => {
         <div className="row gutters-sm">
           <div className="col-md-4 mb-3">
             <CardWrap>
-              <Link
-                to={`/users/${id}/edit`}
-                // className="btn btn-primary"
-                user={user}
-              >
-                <button className="position-absolute top-0 end-0 btn btn-light btn-sm">
-                  <i className="bi bi-gear"></i>
-                </button>
-              </Link>
+              {currentUser._id === user._id && (
+                <Link to={`/users/${id}/edit`} user={user}>
+                  <button className="position-absolute top-0 end-0 btn btn-light btn-sm">
+                    <i className="bi bi-gear"></i>
+                  </button>
+                </Link>
+              )}
               <div className="d-flex flex-column align-items-center text-center position-relative">
-                <img
-                  src="https://avatars.dicebear.com/api/avataaars/qweqwdas.svg"
-                  className="rounded-circle"
-                  width="150"
-                />
+                <img src={user.image} className="rounded-circle" width="150" />
                 <h1>{user.name}</h1>
 
                 <Profession
@@ -84,9 +77,11 @@ const UserPage = ({ id }) => {
             </Link> */}
           </div>
 
-          <div className="col-md-8">
-            <Comments userId={id} />
-          </div>
+          <CommentsProvider>
+            <div className="col-md-8">
+              <Comments userId={id} />
+            </div>
+          </CommentsProvider>
         </div>
       </div>
     );
@@ -94,11 +89,11 @@ const UserPage = ({ id }) => {
   if (user) {
     return render();
   }
-  return <Loader />;
+  // return <Loader />;
 };
 
 UserPage.propTypes = {
-  id: PropTypes.string.isRequired
+  id: PropTypes.string
 };
 
 export default UserPage;

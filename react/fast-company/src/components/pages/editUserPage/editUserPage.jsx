@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import {
   useHistory,
   useParams
 } from "react-router-dom/cjs/react-router-dom.min";
-import api from "../../../api";
+// import api from "../../../api";
 import FormComponent, {
   TextField,
   RadioField,
@@ -12,66 +12,48 @@ import FormComponent, {
 } from "../../common/form";
 
 import Loader from "../../common/loader";
+import { useProfessions } from "../../../hooks/useProfession";
+import { useQuality } from "../../../hooks/useQuality";
+import { useAuth } from "../../../hooks/useAuth";
 
 const EditUserPage = () => {
   const history = useHistory();
   const { userId } = useParams();
 
-  const [professions, setProfessions] = useState();
-  const [qualities, setQualities] = useState([]);
-  const [data, setData] = useState({
-    name: "",
-    email: "",
-    profession: "",
-    sex: "",
-    qualities: []
-  });
+  console.log("id in userEdit", userId);
+
+  const { currentUser, updateUser } = useAuth();
+  const { professions, loading: professionsLoading } = useProfessions();
+  const { qualities, loading: qualitiesLoading } = useQuality();
+
+  console.log("currentUser", currentUser);
+  // const [data, setData] = useState({
+  //   name: currentUser.name,
+  //   email: currentUser.email,
+  //   profession: currentUser.profession,
+  //   sex: currentUser.sex,
+  //   qualities: currentUser.qualities
+  // });
+
   const transformData = (data) => {
     return data.map((qual) => ({ label: qual.name, value: qual._id }));
   };
 
-  useEffect(() => {
-    // setIsLoading(true);
-    api.users.getById(userId).then(({ profession, qualities, ...data }) =>
-      setData((prevState) => ({
-        ...prevState,
-        ...data,
-        qualities: transformData(qualities),
-        profession: profession._id
-      }))
-    );
-    api.professions.fetchAll().then((data) => {
-      const professionsList = Object.keys(data).map((professionName) => ({
-        label: data[professionName].name,
-        value: data[professionName]._id
-      }));
-      setProfessions(professionsList);
-    });
-    api.qualities.fetchAll().then((data) => {
-      const qualitiesList = Object.keys(data).map((optionName) => ({
-        value: data[optionName]._id,
-        label: data[optionName].name,
-        color: data[optionName].color
-      }));
-      setQualities(qualitiesList);
-    });
-  }, []);
-
-  const getProfessionById = (id) => {
-    for (const prof of professions) {
-      if (prof.value === id) {
-        return { _id: prof.value, name: prof.label };
-      }
-    }
-  };
+  // const getProfessionById = (id) => {
+  //   for (const prof of professions) {
+  //     if (prof.value === id) {
+  //       return { _id: prof.value, name: prof.label };
+  //     }
+  //   }
+  // };
   const getQualities = (elements) => {
     const qualitiesArray = [];
     elements.forEach((elem) => {
       for (const quality in qualities) {
-        if (elem.value === qualities[quality].value) {
+        if (elem === qualities[quality]._id) {
           qualitiesArray.push({
-            _id: qualities[quality].value,
-            name: qualities[quality].label,
+            value: qualities[quality]._id,
+            label: qualities[quality].name,
             color: qualities[quality].color
           });
         }
@@ -98,22 +80,15 @@ const EditUserPage = () => {
   };
 
   const handleSubmit = (newData) => {
-    const { profession, qualities } = newData;
-
-    const dataToUpdate = {
-      ...newData,
-      profession: getProfessionById(profession),
-      qualities: getQualities(qualities)
-    };
-
-    api.users
-      .update(userId, {
-        ...dataToUpdate
-      })
-      .then((data) => history.push(`/users/${data._id}`));
+    const qualitiesArray = [];
+    for (const q of newData.qualities) {
+      q.value ? qualitiesArray.push(q.value) : qualitiesArray.push(q);
+    }
+    updateUser({ ...newData, qualities: qualitiesArray });
+    // console.log();
   };
 
-  if (data && professions && qualities) {
+  if (currentUser && !professionsLoading && !qualitiesLoading) {
     return (
       <div className="mt-3 container">
         <div className="row">
@@ -122,7 +97,7 @@ const EditUserPage = () => {
             <FormComponent
               onSubmit={handleSubmit}
               validatorConfig={validateConfig}
-              defaultData={data}
+              defaultData={currentUser}
             >
               <TextField
                 label="Имя"
@@ -132,16 +107,16 @@ const EditUserPage = () => {
               />
               <TextField label="Email" name="email" />
               <SelectField
-                options={professions}
+                options={transformData(professions)}
                 label="Выбирите профессию"
                 name="profession"
                 // defaultValue={data.profession}
-                defaultOption={getProfessionById(data.profession)}
+                defaultOption={currentUser.profession}
               />
               <RadioField
                 label="Выберите пол"
                 name="sex"
-                // defaultValue={data.sex}
+                defaultValue={currentUser.sex}
                 options={[
                   { name: "Мужской", value: "male" },
                   { name: "Женский", value: "female" },
@@ -149,9 +124,8 @@ const EditUserPage = () => {
                 ]}
               />
               <MultiSelectField
-                options={qualities}
-                // defaultValue={data.qualities || []}
-                defaultOptions={data.qualities || []}
+                options={transformData(qualities)}
+                defaultOptions={getQualities(currentUser.qualities) || []}
                 name="qualities"
                 label="Выберите качества"
               />
@@ -159,7 +133,7 @@ const EditUserPage = () => {
                 <button
                   type="button"
                   className="d-block btn btn-secondary w-50 mx-auto mb-3 p-1"
-                  onClick={() => history.push(`/users/${data._id}`)}
+                  onClick={() => history.push(`/users/${currentUser._id}`)}
                 >
                   Отмена
                 </button>

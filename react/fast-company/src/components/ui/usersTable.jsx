@@ -12,7 +12,7 @@ const UsersTable = ({
   users,
   onSort,
   selectedSort,
-  onDelete,
+  // onDelete,
   onBook,
   ...rest
 }) => {
@@ -39,19 +39,19 @@ const UsersTable = ({
       component: (user) => (
         <Bookmark bookmark={user.bookmark} onBook={onBook} id={user._id} />
       )
-    },
-    delete: {
-      component: (user) => (
-        <button
-          className="btn btn-danger"
-          onClick={() => {
-            onDelete(user._id);
-          }}
-        >
-          delete
-        </button>
-      )
     }
+    // delete: {
+    //   component: (user) => (
+    //     <button
+    //       className="btn btn-danger"
+    //       onClick={() => {
+    //         onDelete(user._id);
+    //       }}
+    //     >
+    //       delete
+    //     </button>
+    //   )
+    // }
   };
 
   return (
@@ -73,7 +73,7 @@ UsersTable.propTypes = {
   users: PropTypes.array.isRequired,
   onSort: PropTypes.func.isRequired,
   selectedSort: PropTypes.object.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  // onDelete: PropTypes.func.isRequired,
   onBook: PropTypes.func.isRequired
 };
 

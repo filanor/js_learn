@@ -10,6 +10,7 @@ import UsersTable from "../../ui/usersTable";
 
 import { useUser } from "../../../hooks/useUsers";
 import { useProfessions } from "../../../hooks/useProfession";
+import { useAuth } from "../../../hooks/useAuth";
 // import FormComponent from "../../common/form";
 
 const UsersListPage = () => {
@@ -19,8 +20,9 @@ const UsersListPage = () => {
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const pageSize = 8;
 
+  const { currentUser } = useAuth();
   const { users } = useUser();
-  const { professions } = useProfessions();
+  const { professions, loading: professinsLoading } = useProfessions();
 
   useEffect(() => {
     setCurrentPage(1);
@@ -56,17 +58,35 @@ const UsersListPage = () => {
   };
 
   const filterUsers = () => {
+    let filteredUsers = [];
     if (selectedProf) {
-      return users.filter((user) => user.profession === selectedProf._id);
+      filteredUsers = users.filter(
+        (user) => user.profession === selectedProf._id
+      );
     } else if (searchQuery) {
-      return users.filter((user) => {
+      filteredUsers = users.filter((user) => {
         const name = user.name.toLowerCase();
         return name.includes(searchQuery.toLowerCase());
       });
     } else {
-      return users;
+      filteredUsers = users;
     }
+    return filteredUsers.filter((user) => user._id !== currentUser._id);
   };
+
+  // const filterUsers = () => {
+  //   const filteredUsers = searchQuery
+  //     ? users.filter(
+  //         (user) =>
+  //           user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
+  //       )
+  //     : selectedProf
+  //     ? users.filter(
+  //         (user) =>
+  //           JSON.stringify(user.profession) === JSON.stringify(selectedProf)
+  //       )
+  //     : users;
+  // };
 
   if (users) {
     const filtredUsers = filterUsers();
@@ -93,19 +113,23 @@ const UsersListPage = () => {
       <div className="container">
         <div className="row">
           <div className="col-sm-12 d-flex justify-content-center">
-            <div className="d-flex flex-column flex-shrink-1 p-3 justify-content-start">
-              {/* {(!isProfessionsLoaded && <Loader />) || ( */}
-              <GroopList
-                items={professions}
-                onItemSelect={handleProfessionSelect}
-                selectedItem={selectedProf}
-              />
-              {/* )} */}
+            {professions && !professinsLoading && (
+              <div className="d-flex flex-column flex-shrink-1 p-3 justify-content-start">
+                <GroopList
+                  items={professions}
+                  onItemSelect={handleProfessionSelect}
+                  selectedItem={selectedProf}
+                />
+                {/* )} */}
 
-              <button className="btn btn-secondary mt-2" onClick={clearFilter}>
-                Очистить
-              </button>
-            </div>
+                <button
+                  className="btn btn-secondary mt-2"
+                  onClick={clearFilter}
+                >
+                  Очистить
+                </button>
+              </div>
+            )}
 
             <div className="d-flex flex-column p-3 flex-grow-1">
               <input

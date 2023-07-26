@@ -25,6 +25,7 @@ const RegisterForm = () => {
   const { qualities } = useQuality();
   const qualitiesList = qualities.map((q) => ({ value: q._id, label: q.name }));
   const [data, setData] = useState({
+    name: "",
     email: "",
     password: "",
     profession: "",
@@ -34,6 +35,15 @@ const RegisterForm = () => {
   });
 
   const validateConfig = {
+    name: {
+      isRequired: {
+        message: "Имя обязателено для заполнения"
+      },
+      min: {
+        message: "минимальный размер пароля 3 символа",
+        value: 3
+      }
+    },
     email: {
       isRequired: {
         message: "Email обязателен для заполнения"
@@ -105,6 +115,13 @@ const RegisterForm = () => {
       <>
         <h3 className="mb-4 text-center">Register</h3>
         <form onSubmit={handleSubmit}>
+          <TextField
+            label="Введите Имя"
+            name="name"
+            value={data.name}
+            onChange={handleChange}
+            error={errors.name}
+          />
           <TextField
             label="Введите email"
             name="email"

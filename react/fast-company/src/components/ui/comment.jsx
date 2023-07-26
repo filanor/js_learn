@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import PropTypes from "prop-types";
-import api from "../../api";
+import { useUser } from "../../hooks/useUsers";
+import { displayDate } from "../../utils/displayDate";
+import { useAuth } from "../../hooks/useAuth";
 
 const Comment = ({
   _id: id,
@@ -9,97 +11,69 @@ const Comment = ({
   onDelete,
   created_at: created
 }) => {
-  const [author, setAuthor] = useState();
-  useEffect(() => {
-    api.users.getById(userId).then((data) => setAuthor(data));
-  }, []);
+  const { getUserById } = useUser();
+  const { currentUser } = useAuth();
+  const author = getUserById(userId);
 
-  const getdate = () => {
-    const now = new Date();
-    const date = new Date(Number(created));
-
-    const yearDif = now.getFullYear() - date.getFullYear();
-    if (yearDif === 0) {
-      const dayDif = now.getDay() - date.getDay();
-      if (dayDif === 0) {
-        const hourDif = now.getHours() - date.getHours();
-        if (hourDif === 0) {
-          const minDif = now.getMinutes() - date.getMinutes();
-          if (minDif >= 0 && minDif < 5) return "1 минуту назад";
-          if (minDif >= 5 && minDif < 10) return "5 минут назад";
-          if (minDif >= 10 && minDif < 30) return "10 минут назад";
-          return "30 минут назад";
-        }
-        return `${date.getHours()}:${date.getMinutes()}`;
-      }
-      return `${date.getDay()} ${date.toLocaleString("default", {
-        month: "long"
-      })}`;
-    }
-
-    return (
-      date.getFullYear() + "." + (date.getMonth() + 1) + "." + date.getDate()
-    );
-  };
-
+  // console.log()
   return (
-    author && (
-      <div className="bg-light card-body mb-3">
-        <div className="row">
-          <div className="col">
-            <div className="d-flex flex-start">
-              <img
-                src="https://avatars.dicebear.com/api/avataaars/qweqasdas.svg"
-                className="
+    <div className="bg-light card-body mb-3">
+      <div className="row">
+        <div className="col">
+          <div className="d-flex flex-start">
+            <img
+              src={author.image}
+              className="
                         rounded-circle
                         shadow-1-strong
                         me-3
                     "
-                alt="avatar"
-                width="65"
-                height="65"
-              />
-              <div
-                className="
+              alt="avatar"
+              width="65"
+              height="65"
+            />
+            <div
+              className="
                         flex-grow-1 flex-shrink-1
                     "
-              >
-                <div className="mb-4">
-                  <div
-                    className="
+            >
+              <div className="mb-4">
+                <div
+                  className="
                                 d-flex
                                 justify-content-between
                                 align-items-center
                             "
-                  >
-                    <p className="mb-1">
-                      {author.name}
-                      <span className="small"> {getdate()}</span>
-                    </p>
+                >
+                  <p className="mb-1">
+                    {author.name}
+                    <span className="small"> {displayDate(created)}</span>
+                  </p>
+                  {currentUser._id === userId && (
                     <button
                       onClick={() => onDelete(id)}
                       className="
-                                    btn btn-sm
-                                    text-primary
-                                    d-flex
-                                    align-items-center
-                                "
+                                  btn btn-sm
+                                  text-primary
+                                  d-flex
+                                  align-items-center
+                              "
                     >
                       <i
                         className="
-                                        bi bi-x-lg
-                                    "
+                                      bi bi-x-lg
+                                  "
                       ></i>
                     </button>
-                  </div>
-                  <p className="small mb-0">{content}</p>
+                  )}
                 </div>
+                <p className="small mb-0">{content}</p>
               </div>
             </div>
           </div>
         </div>
       </div>
-    )
+    </div>
   );
 };
 
