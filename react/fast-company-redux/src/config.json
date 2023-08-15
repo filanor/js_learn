@@ -1,0 +1,6 @@
+{
+  "apiEndpoint": "https://fast-company-firebase-36f20-default-rtdb.europe-west1.firebasedatabase.app/",
+  "authEndpoint": "https://identitytoolkit.googleapis.com/v1/",
+  "refreshToken": "https://securetoken.googleapis.com/v1/token",
+  "isFirebase": true
+}
