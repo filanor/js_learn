@@ -1,50 +1,71 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { orderBy } from "lodash";
 
 import CommentsList from "../common/comments/commentsList";
 import AddComment from "../common/comments/addComment";
 import CardWrap from "../common/Card";
-import { useComments } from "../../hooks/useComents";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  getCommentsLoadingStatus,
+  getComments,
+  loadСommentsList,
+  removeComments,
+  createComments
+} from "../../store/comments";
+import Loader from "../common/loader";
+import { nanoid } from "nanoid";
+import { getCurrentUserId } from "../../store/users";
 
 const Comments = ({ userId }) => {
-  // const [comments, setComments] = useState();
-  const { comments, createComments, removeComments } = useComments();
+  const dispatch = useDispatch();
+  const isCommentsLoaded = useSelector(getCommentsLoadingStatus());
+  const commentsList = useSelector(getComments());
+  const currentUserId = useSelector(getCurrentUserId());
+  console.log("commentsList", commentsList);
+  useEffect(() => {
+    dispatch(loadСommentsList(userId));
+  }, [userId]);
 
-  const handleAddComment = (comment) => {
-    createComments(comment);
-    // const newComment = { ...comment, pageId: userId };
-    // api.comments.add(newComment).then((data) => {
-    //   setComments((prevComments) => [...prevComments, data]);
-    // });
+  const handleAddComment = (data) => {
+    // createComments(comment);
+    const comment = {
+      _id: nanoid(),
+      ...data,
+      userId: currentUserId,
+      created_at: Date.now(),
+      pageId: userId
+    };
+    dispatch(createComments(comment));
   };
 
   const handleDeleteComment = (commentID) => {
-    removeComments(commentID);
-    // api.comments.remove(commentID);
-    // .then((id) =>
-    //   // setComments((prevComments) => prevComments.filter((x) => x._id !== id))
-    // );
+    dispatch(removeComments(commentID));
   };
 
-  const sortedComments = orderBy(comments, ["created_at"], ["desc"]);
+  const sortedComments = orderBy(commentsList, ["created_at"], ["desc"]);
 
   return (
     <>
       <CardWrap>
         <AddComment onAddComment={handleAddComment} />
       </CardWrap>
-
-      {comments && comments.length > 0 && (
-        <CardWrap>
-          <h2>Comments</h2>
-          <hr />
-          <CommentsList
-            comments={sortedComments}
-            onDelete={handleDeleteComment}
-          />
-        </CardWrap>
-      )}
+      <CardWrap>
+        <h2>Comments</h2>
+        <hr />
+        {!isCommentsLoaded ? (
+          sortedComments.length > 0 ? (
+            <CommentsList
+              comments={sortedComments}
+              onDelete={handleDeleteComment}
+            />
+          ) : (
+            <p>Комментариев пока нет</p>
+          )
+        ) : (
+          <Loader />
+        )}
+      </CardWrap>
     </>
   );
 };

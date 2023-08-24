@@ -1,10 +1,9 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 
 import { displayDate } from "../../utils/displayDate";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getCurrentUserId, getUserById } from "../../store/users";
-import { getCommetns } from "../../store/comments";
 
 const Comment = ({
   _id: id,
@@ -13,14 +12,9 @@ const Comment = ({
   onDelete,
   created_at: created
 }) => {
-  const dispatch = useDispatch();
   const currentUserId = useSelector(getCurrentUserId());
   const author = useSelector(getUserById(userId));
 
-  useEffect(() => {
-    dispatch(getCommetns());
-  }, []);
-  // console.log()
   return (
     <div className="bg-light card-body mb-3">
       <div className="row">

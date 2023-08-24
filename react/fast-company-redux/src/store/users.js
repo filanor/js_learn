@@ -59,7 +59,6 @@ const usersSlice = createSlice({
     userUpdated: (state, action) => {
       state.entities = state.entities.map((u) => {
         if (u._id === action.payload._id) {
-          console.log("Бинго");
           return action.payload;
         }
         return u;

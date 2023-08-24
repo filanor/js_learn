@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-// import qualityService from "../services/quality.service";
 import commentsService from "../services/comments.service";
 
 const commentsSlice = createSlice({
@@ -20,12 +19,26 @@ const commentsSlice = createSlice({
     commentsRequestFailed: (state, action) => {
       state.error = action.payload;
       state.isLoading = false;
+    },
+    commentsCreated: (state, action) => {
+      state.entities.push(action.payload);
+    },
+    commentsRemoved: (state, action) => {
+      state.entities = state.entities.filter((q) => q._id !== action.payload);
+
+      // state.entities = null;
     }
   }
 });
 
 const { actions, reducer: commentsReducer } = commentsSlice;
-const { commentsReceived, commentsRequested, commentsRequestFailed } = actions;
+const {
+  commentsReceived,
+  commentsRequested,
+  commentsRequestFailed,
+  commentsCreated,
+  commentsRemoved
+} = actions;
 
 export const loadСommentsList = (userId) => async (dispatch) => {
   dispatch(commentsRequested());
@@ -37,7 +50,29 @@ export const loadСommentsList = (userId) => async (dispatch) => {
   }
 };
 
-export const getCommetns = () => (state) => state.comments.entities;
+export const removeComments = (id) => async (dispatch) => {
+  try {
+    const { content } = await commentsService.removeComments(id);
+    console.log("asdf", content);
+    if (content === null) {
+      dispatch(commentsRemoved(id));
+    }
+  } catch (error) {
+    commentsRequestFailed(error.message);
+  }
+};
+
+export const createComments = (comment) => async (dispatch) => {
+  try {
+    const { content } = await commentsService.create(comment);
+    console.log(content);
+    dispatch(commentsCreated(comment));
+  } catch (error) {
+    commentsRequestFailed(error.message);
+  }
+};
+
+export const getComments = () => (state) => state.comments.entities;
 export const getCommentsLoadingStatus = () => (state) =>
   state.comments.isLoading;
 
