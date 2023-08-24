@@ -1,11 +1,12 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
 import NavProfile from "./navProfile";
+import { useSelector } from "react-redux";
+import { getIsLoggedIn } from "../../store/users.js";
 
 const NavBar = () => {
   const { pathname } = useLocation();
-  const { currentUser } = useAuth();
+  const IsLoggedIn = useSelector(getIsLoggedIn());
 
   const getTabClass = (to) => {
     if (to === pathname) {
@@ -30,7 +31,7 @@ const NavBar = () => {
               Login
             </Link>
           </li> */}
-          {currentUser && (
+          {IsLoggedIn && (
             <li className="nav-item">
               <Link className={getTabClass("/users")} to="/users">
                 Users
@@ -39,7 +40,7 @@ const NavBar = () => {
           )}
         </ul>
         <div className="d-flex">
-          {currentUser ? (
+          {IsLoggedIn ? (
             <NavProfile />
           ) : (
             <Link className={getTabClass("/login")} to="/login">

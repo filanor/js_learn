@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-no-comment-textnodes */
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Redirect,
   Route,
@@ -16,33 +16,24 @@ import "react-toastify/dist/ReactToastify.css";
 import AuthProvider from "./hooks/useAuth";
 import ProtectedRoute from "./components/common/protectedRoute";
 import LogOut from "./layouts/logOut";
-import { useDispatch } from "react-redux";
-import { loadQualitiesList } from "./store/qualities";
-import { loadingProfissionsList } from "./store/professions";
+import AppLoader from "./components/ui/hoc/appLoader";
 
 const App = () => {
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(loadQualitiesList());
-    dispatch(loadingProfissionsList());
-  }, []);
-
   return (
     <div className="main-div d-flex flex-column">
-      <AuthProvider>
-        <NavBar />
-
-        <Switch>
-          <ProtectedRoute path="/users/:userId?/:edit?" component={Users} />
-          <Route path="/login/:type?" component={Login} />
-          <Route path="/logout" component={LogOut} />
-          <Route exact path="/" component={Main} />
-          <Redirect to="/" />
-          {/* <Users />; */}
-        </Switch>
-      </AuthProvider>
-
+      <AppLoader>
+        <AuthProvider>
+          <NavBar />
+          <Switch>
+            <ProtectedRoute path="/users/:userId?/:edit?" component={Users} />
+            <Route path="/login/:type?" component={Login} />
+            <Route path="/logout" component={LogOut} />
+            <Route exact path="/" component={Main} />
+            <Redirect to="/" />
+            {/* <Users />; */}
+          </Switch>
+        </AuthProvider>
+      </AppLoader>
       <ToastContainer />
     </div>
   );

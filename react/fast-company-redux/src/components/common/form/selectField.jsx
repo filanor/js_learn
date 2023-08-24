@@ -64,7 +64,7 @@ SelectField.defaultProps = {
 SelectField.propTypes = {
   options: PropTypes.oneOfType([PropTypes.array, PropTypes.object]),
   label: PropTypes.string,
-  defaultOption: PropTypes.object,
+  defaultOption: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
   classes: PropTypes.string,
   name: PropTypes.string,
   value: PropTypes.string,

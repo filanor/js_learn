@@ -8,14 +8,12 @@ import CommentsProvider from "../../../hooks/useComents";
 import Profession from "../../ui/profession";
 import QualitiesList from "../../ui/qualities/qualitiesList";
 
-import { useUser } from "../../../hooks/useUsers";
-import { useAuth } from "../../../hooks/useAuth";
+import { useSelector } from "react-redux";
+import { getCurrentUserId, getUserById } from "../../../store/users";
 
 const UserPage = ({ id }) => {
-  // const [user, setUser] = useState(null);
-  const { currentUser } = useAuth();
-  const { getUserById } = useUser();
-  const user = getUserById(id);
+  const currentUserId = useSelector(getCurrentUserId());
+  const user = useSelector(getUserById(id));
 
   const render = () => {
     return (
@@ -23,7 +21,7 @@ const UserPage = ({ id }) => {
         <div className="row gutters-sm">
           <div className="col-md-4 mb-3">
             <CardWrap>
-              {currentUser._id === user._id && (
+              {currentUserId === user._id && (
                 <Link to={`/users/${id}/edit`} user={user}>
                   <button className="position-absolute top-0 end-0 btn btn-light btn-sm">
                     <i className="bi bi-gear"></i>
@@ -42,12 +40,10 @@ const UserPage = ({ id }) => {
                 <div className="text-muted">
                   <i
                     className="bi bi-caret-down-fill text-primary"
-                    role="button"
-                  ></i>
+                    role="button"></i>
                   <i
                     className="bi bi-caret-up text-secondary"
-                    role="button"
-                  ></i>
+                    role="button"></i>
                   <span className="ms-2">{user.rate}</span>
                 </div>
               </div>

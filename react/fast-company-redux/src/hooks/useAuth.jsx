@@ -81,7 +81,7 @@ const AuthProvider = ({ children }) => {
       );
 
       setTokens(data);
-      await getUserData(localStorageService.getUsetId());
+      await getUserData(localStorageService.getUserId());
     } catch (error) {
       errorCatcher(error);
       const { code, message } = error.response.data.error;
@@ -105,7 +105,6 @@ const AuthProvider = ({ children }) => {
   async function createUser(data) {
     try {
       const { content } = await userService.create(data);
-      console.log(content);
       setCurrentUser(content);
     } catch (error) {
       errorCatcher(error);
@@ -115,7 +114,7 @@ const AuthProvider = ({ children }) => {
   async function updateUser(data) {
     try {
       const { content } = await userService.update(data);
-      console.log(content);
+
       setCurrentUser(content);
       history.push("/users/" + data._id);
     } catch (error) {
@@ -141,7 +140,7 @@ const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     if (localStorageService.getAccessToken()) {
-      getUserData(localStorageService.getUsetId());
+      getUserData(localStorageService.getUserId());
     } else {
       setIsLoading(false);
     }

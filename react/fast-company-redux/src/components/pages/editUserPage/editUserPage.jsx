@@ -10,8 +10,8 @@ import FormComponent, {
 
 import Loader from "../../common/loader";
 
-import { useAuth } from "../../../hooks/useAuth";
-import { useSelector } from "react-redux";
+// import { useAuth } from "../../../hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
 import {
   getQualitiesLoadingStatus,
   getQuality
@@ -20,20 +20,19 @@ import {
   getProfessions,
   getProfessionsLoadingStatus
 } from "../../../store/professions";
+import { getCurrentUserData, updateUser } from "../../../store/users";
 
 const EditUserPage = () => {
   const history = useHistory();
-
-  const { currentUser, updateUser } = useAuth();
+  const dispatch = useDispatch();
+  // const { updateUser } = useAuth();
+  const currentUser = useSelector(getCurrentUserData());
   const qualities = useSelector(getQuality());
   const qualitiesLoading = useSelector(getQualitiesLoadingStatus());
   const professions = useSelector(getProfessions());
   const professionsLoading = useSelector(getProfessionsLoadingStatus());
 
-  console.log("PROFESSIONS", professions);
-
   const transformData = (data) => {
-    console.log(data);
     return data.map((qual) => ({ label: qual.name, value: qual._id }));
   };
 
@@ -75,7 +74,7 @@ const EditUserPage = () => {
     for (const q of newData.qualities) {
       q.value ? qualitiesArray.push(q.value) : qualitiesArray.push(q);
     }
-    updateUser({ ...newData, qualities: qualitiesArray });
+    dispatch(updateUser({ ...newData, qualities: qualitiesArray }));
     // console.log();
   };
 
@@ -88,7 +87,8 @@ const EditUserPage = () => {
             <FormComponent
               onSubmit={handleSubmit}
               validatorConfig={validateConfig}
-              defaultData={currentUser}>
+              defaultData={currentUser}
+            >
               <TextField
                 label="Имя"
                 name="name"
@@ -123,12 +123,14 @@ const EditUserPage = () => {
                 <button
                   type="button"
                   className="d-block btn btn-secondary w-50 mx-auto mb-3 p-1"
-                  onClick={() => history.push(`/users/${currentUser._id}`)}>
+                  onClick={() => history.push(`/users/${currentUser._id}`)}
+                >
                   Отмена
                 </button>
                 <button
                   className="d-block btn btn-primary w-50 mx-auto mb-3 p-1"
-                  type="submit">
+                  type="submit"
+                >
                   Изменить
                 </button>
               </div>

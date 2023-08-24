@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { useUser } from "../../hooks/useUsers";
+
 import { displayDate } from "../../utils/displayDate";
-import { useAuth } from "../../hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { getCurrentUserId, getUserById } from "../../store/users";
+import { getCommetns } from "../../store/comments";
 
 const Comment = ({
   _id: id,
@@ -11,10 +13,13 @@ const Comment = ({
   onDelete,
   created_at: created
 }) => {
-  const { getUserById } = useUser();
-  const { currentUser } = useAuth();
-  const author = getUserById(userId);
+  const dispatch = useDispatch();
+  const currentUserId = useSelector(getCurrentUserId());
+  const author = useSelector(getUserById(userId));
 
+  useEffect(() => {
+    dispatch(getCommetns());
+  }, []);
   // console.log()
   return (
     <div className="bg-light card-body mb-3">
@@ -49,7 +54,7 @@ const Comment = ({
                     {author.name}
                     <span className="small"> {displayDate(created)}</span>
                   </p>
-                  {currentUser._id === userId && (
+                  {currentUserId === userId && (
                     <button
                       onClick={() => onDelete(id)}
                       className="

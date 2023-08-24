@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.1.0",
+    "history": "^4.9.0",
     "lodash": "^4.17.15",
     "nanoid": "^4.0.2",
     "prop-types": "^15.8.1",
@@ -48,6 +49,7 @@
   },
   "devDependencies": {
     "eslint": "^8.38.0",
+    "eslint-config-prettier": "^9.0.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-n": "^15.7.0",

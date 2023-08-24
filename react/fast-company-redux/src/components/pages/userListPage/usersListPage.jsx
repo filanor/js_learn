@@ -7,15 +7,12 @@ import { paginate } from "../../../utils/paginate";
 import GroopList from "../../common/groopList";
 import Loader from "../../common/loader";
 import UsersTable from "../../ui/usersTable";
-
-import { useUser } from "../../../hooks/useUsers";
-import { useAuth } from "../../../hooks/useAuth";
 import { useSelector } from "react-redux";
 import {
   getProfessions,
   getProfessionsLoadingStatus
 } from "../../../store/professions";
-// import FormComponent from "../../common/form";
+import { getCurrentUserId, getUsersList } from "../../../store/users";
 
 const UsersListPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,8 +21,8 @@ const UsersListPage = () => {
   const [sortBy, setSortBy] = useState({ path: "name", order: "asc" });
   const pageSize = 8;
 
-  const { currentUser } = useAuth();
-  const { users } = useUser();
+  const currentUserId = useSelector(getCurrentUserId());
+  const users = useSelector(getUsersList());
 
   const professions = useSelector(getProfessions());
   const professinsLoading = useSelector(getProfessionsLoadingStatus());
@@ -77,22 +74,8 @@ const UsersListPage = () => {
     } else {
       filteredUsers = users;
     }
-    return filteredUsers.filter((user) => user._id !== currentUser._id);
+    return filteredUsers.filter((user) => user._id !== currentUserId);
   };
-
-  // const filterUsers = () => {
-  //   const filteredUsers = searchQuery
-  //     ? users.filter(
-  //         (user) =>
-  //           user.name.toLowerCase().indexOf(searchQuery.toLowerCase()) !== -1
-  //       )
-  //     : selectedProf
-  //     ? users.filter(
-  //         (user) =>
-  //           JSON.stringify(user.profession) === JSON.stringify(selectedProf)
-  //       )
-  //     : users;
-  // };
 
   if (users) {
     const filtredUsers = filterUsers();
@@ -130,7 +113,8 @@ const UsersListPage = () => {
 
                 <button
                   className="btn btn-secondary mt-2"
-                  onClick={clearFilter}>
+                  onClick={clearFilter}
+                >
                   Очистить
                 </button>
               </div>
