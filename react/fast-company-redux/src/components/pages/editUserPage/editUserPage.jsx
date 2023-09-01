@@ -9,8 +9,6 @@ import FormComponent, {
 } from "../../common/form";
 
 import Loader from "../../common/loader";
-
-// import { useAuth } from "../../../hooks/useAuth";
 import { useDispatch, useSelector } from "react-redux";
 import {
   getQualitiesLoadingStatus,
@@ -25,7 +23,6 @@ import { getCurrentUserData, updateUser } from "../../../store/users";
 const EditUserPage = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  // const { updateUser } = useAuth();
   const currentUser = useSelector(getCurrentUserData());
   const qualities = useSelector(getQuality());
   const qualitiesLoading = useSelector(getQualitiesLoadingStatus());

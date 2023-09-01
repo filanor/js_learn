@@ -2,7 +2,13 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import configFile from "../config.json";
 import localStorageService from "./localStorage.service";
-import { httpAuth } from "../hooks/useAuth";
+
+export const httpAuth = axios.create({
+  // baseURL: config.authEndpoint,
+  params: {
+    key: process.env.REACT_APP_FIREBASE_KEY
+  }
+});
 
 const http = axios.create({
   baseURL: configFile.apiEndpoint

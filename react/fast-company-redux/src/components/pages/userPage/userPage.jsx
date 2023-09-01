@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import CardWrap from "../../common/Card";
 import Comments from "../../ui/comments";
-import CommentsProvider from "../../../hooks/useComents";
+
 import Profession from "../../ui/profession";
 import QualitiesList from "../../ui/qualities/qualitiesList";
 
@@ -40,10 +40,12 @@ const UserPage = ({ id }) => {
                 <div className="text-muted">
                   <i
                     className="bi bi-caret-down-fill text-primary"
-                    role="button"></i>
+                    role="button"
+                  ></i>
                   <i
                     className="bi bi-caret-up text-secondary"
-                    role="button"></i>
+                    role="button"
+                  ></i>
                   <span className="ms-2">{user.rate}</span>
                 </div>
               </div>
@@ -72,12 +74,9 @@ const UserPage = ({ id }) => {
               Все пользователи
             </Link> */}
           </div>
-
-          <CommentsProvider>
-            <div className="col-md-8">
-              <Comments userId={id} />
-            </div>
-          </CommentsProvider>
+          <div className="col-md-8">
+            <Comments userId={id} />
+          </div>
         </div>
       </div>
     );
