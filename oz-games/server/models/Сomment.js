@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-CommentSchema = new Schema({
+const CommentSchema = new Schema({
   productId: {
     type: Schema.Types.ObjectId,
     required: true,

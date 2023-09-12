@@ -2,5 +2,7 @@
   "port": 8080,
   "mongoUri": "mongodb+srv://filanor:PfBvgthfnjhf!42@cluster0.dyedpg2.mongodb.net/fast-company?retryWrites=true&w=majority",
   "accessSecrete": "ljdfslajskfLKJHK878234lklajskdflakjsdfhi39839!!##@jo",
-  "refreshSecrete": "qwerkj3243245dsvxzcv**&%$##v$#$bkjnsda1@@@$"
+  "refreshSecrete": "qwerkj3243245dsvxzcv**&%$##v$#$bkjnsda1@@@$",
+  "bggApiSearch": "https://boardgamegeek.com/xmlapi/search?search=",
+  "bggApiGame": ": https://boardgamegeek.com/xmlapi/boardgame/"
 }

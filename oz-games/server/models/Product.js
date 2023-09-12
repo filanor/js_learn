@@ -1,6 +1,6 @@
 const { Schema, model } = require("mongoose");
 
-ProductSchema = new Schema(
+const ProductSchema = new Schema(
   {
     title: { type: String, required: true },
     originalTitle: { type: String },
@@ -14,7 +14,8 @@ ProductSchema = new Schema(
     price: { type: Number, required: true },
     recomendedPrice: { type: Number },
     img: [{ type: String, required: true }],
-    status: { type: Schema.Types.ObjectId, required: true }
+    isFeatured: { type: Boolean, default: false }
+    // status: { type: Schema.Types.ObjectId, required: true }
   },
   {
     timestamps: true
